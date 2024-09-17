@@ -17,11 +17,10 @@ CREATE TABLE "Product" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "fullName" VARCHAR(15) NOT NULL,
-    "company" VARCHAR(10) NOT NULL,
-    "email" VARCHAR(15) NOT NULL,
-    "password" VARCHAR(30) NOT NULL,
+    "fullName" VARCHAR(255) NOT NULL,
+    "company" VARCHAR(255) NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
