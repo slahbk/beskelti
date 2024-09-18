@@ -1,0 +1,42 @@
+import {
+    Controller,
+    Get,
+    Param,
+    Post,
+    Body,
+    Put,
+    Delete,
+  } from '@nestjs/common';
+  import { ProductService } from '../service/product.service';
+  import { Product as ProductModel } from '@prisma/client';
+  interface ProductCreateInput extends ProductModel {
+    user: {
+      connect: {
+        id: number;
+      };
+    };
+  }
+  @Controller('product')
+  export class ProductController {
+    constructor(private productService: ProductService) {}
+  
+    @Get()
+    async getAllProducts() {
+      return await this.productService.getAllProducts();
+    }
+
+    @Get(':id')
+    async getProduct(@Param('id') id: number) {
+      return await this.productService.getProduct({ id: Number(id) });
+    }
+
+    @Post('add')
+    async createProduct(@Body() product: ProductCreateInput) {
+      return await this.productService.createProduct(product);
+    }
+
+    @Delete('delete/:id')
+    async deleteProduct(@Param('id') id: number) {
+      return await this.productService.deleteProduct(id);
+    }
+}

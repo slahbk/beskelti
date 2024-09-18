@@ -31,7 +31,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
               source={
                 colorScheme == "dark"
@@ -47,7 +47,7 @@ export default function TabLayout() {
         name="Bikes"
         options={{
           title: "Bikes",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
               source={
                 colorScheme == "dark"
@@ -63,7 +63,7 @@ export default function TabLayout() {
         name="Accessories"
         options={{
           title: "Accessories",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
               source={
                 colorScheme == "dark"
@@ -79,7 +79,7 @@ export default function TabLayout() {
         name="Tools"
         options={{
           title: "Tools",
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
               source={
                 colorScheme == "dark"

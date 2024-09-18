@@ -8,11 +8,14 @@ import {
   ScrollView,
   Platform,
   StatusBar,
+  TextInputBase,
 } from "react-native";
 import React, { useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
+import axios from "axios";
+import { ip } from "@/constants/IpAdress";
 
 export default function Bikes() {
   const colorScheme = useColorScheme();

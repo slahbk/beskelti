@@ -7,8 +7,8 @@ CREATE TABLE "Product" (
     "description" TEXT NOT NULL,
     "category" VARCHAR(10) NOT NULL,
     "section" VARCHAR(10) NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "buyerId" INTEGER NOT NULL,
+    "price" VARCHAR(10) NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -29,4 +29,4 @@ CREATE TABLE "User" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_buyerId_fkey" FOREIGN KEY ("buyerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
