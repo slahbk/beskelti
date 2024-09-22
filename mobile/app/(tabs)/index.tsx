@@ -4,15 +4,27 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
+  Text,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ListBikes from "@/components/ListBikes";
 import ListAccessories from "@/components/ListAccessories";
 import ListTools from "@/components/ListTools";
+import { useEffect, useState } from "react";
+import { useFetchProduct } from "@/hooks/useFetchProduct";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "@/toolkit/reducers/productSlice";
 
 export default function HomeScreen() {
   const isDark = Colors[useColorScheme() ?? "light"].background;
+  const dispatch = useDispatch();
+  const products = useSelector((state: any) => state.products);
+
+  useEffect(() => {
+    dispatch(fetchProducts() as any);
+  }, []);
 
   return (
     <ScrollView

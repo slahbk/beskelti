@@ -9,6 +9,7 @@ CREATE TABLE "Product" (
     "section" VARCHAR(10) NOT NULL,
     "price" VARCHAR(10) NOT NULL,
     "userId" INTEGER NOT NULL,
+    "image" VARCHAR(255)[],
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );

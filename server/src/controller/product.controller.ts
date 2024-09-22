@@ -8,7 +8,7 @@ import {
     Delete,
   } from '@nestjs/common';
   import { ProductService } from '../service/product.service';
-  import { Product as ProductModel } from '@prisma/client';
+  import { Product, Product as ProductModel } from '@prisma/client';
   interface ProductCreateInput extends ProductModel {
     user: {
       connect: {
@@ -33,6 +33,11 @@ import {
     @Post('add')
     async createProduct(@Body() product: ProductCreateInput) {
       return await this.productService.createProduct(product);
+    }
+
+    @Put('update/:id')
+    async updateProduct(@Param('id') id: number, @Body() product: Product) {
+      return await this.productService.updateProduct(id, product);
     }
 
     @Delete('delete/:id')

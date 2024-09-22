@@ -3,11 +3,16 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { store } from "@/toolkit/store";
+import { Provider } from "react-redux";
+import { NativeBaseProvider, Box } from "native-base";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <NativeBaseProvider>
+    <Provider store={store}>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
@@ -92,5 +97,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </Provider>
+    </NativeBaseProvider>
   );
 }

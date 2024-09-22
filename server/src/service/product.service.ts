@@ -24,6 +24,13 @@ export class ProductService {
         });
     }
 
+    async updateProduct(id: number, data: Prisma.ProductUpdateInput): Promise<Product> {
+        return this.prisma.product.update({
+            where: { id: Number(id) },
+            data,
+        });
+    }
+
     async deleteProduct(id: number): Promise<Product> {
         return this.prisma.product.delete({
             where: { id: Number(id) },

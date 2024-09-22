@@ -1,18 +1,17 @@
-import { StyleSheet } from 'react-native'
-import React from 'react'
-import FlatLists from './FlatLists'
+import React from "react";
+import FlatLists from "./FlatLists";
+import { useSelector } from "react-redux";
 
 export default function ListTools() {
+  const products = useSelector((state: any) => state.products);
   return (
     <>
       <FlatLists
         data={{
           title: "Tools",
-          data: [...new Array(5).keys()],
+          data: products.data,
         }}
       />
     </>
-  )
+  );
 }
-
-const styles = StyleSheet.create({})
