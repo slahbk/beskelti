@@ -25,7 +25,8 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 12,
-          borderWidth: 2,
+          borderWidth: 1,
+          height: 70,
           borderColor: selectedId === "normal" ? "#17809e" : isDarkText,
           backgroundColor: selectedId === "normal" ? "#69c4f9" : isDark,
         }}
@@ -39,7 +40,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
               : require("@/assets/animation-icons/bicycle-classic.json")
           }
           autoPlay={true}
-          style={{ width: 100, height: 100, marginBottom: -5 }}
+          style={{ width: 50, height: 50, marginBottom: -5 }}
         />
 
         <Text style={{ color: isDarkText }}>Normal</Text>
@@ -50,7 +51,8 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 10,
-          borderWidth: 2,
+          borderWidth: 1,
+          height: 70,
           borderColor: selectedId === "electric" ? "#17809e" : isDarkText,
           backgroundColor: selectedId === "electric" ? "#69c4f9" : isDark,
         }}
@@ -61,7 +63,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           <AnimatedLottieView
             source={require("@/assets/animation-icons/bicycle-electric.json")}
             autoPlay={true}
-            style={{ width: 100, height: 100, marginBottom: -5 }}
+            style={{ width: 50, height: 50, marginBottom: -5 }}
           />
         </View>
         <Text style={{ color: isDarkText }}>Electric</Text>
@@ -79,5 +81,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     gap: 10,
+    zIndex: 1,
   },
 });
