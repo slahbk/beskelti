@@ -18,7 +18,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
   const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
   return (
-    <View style={styles.inputBlock}>
+    <View style={styles.container}>
       <TouchableOpacity
         style={{
           flex: 1,
@@ -26,7 +26,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           justifyContent: "center",
           borderRadius: 12,
           borderWidth: 1,
-          height: 70,
+          height: 60,
           borderColor: selectedId === "normal" ? "#17809e" : isDarkText,
           backgroundColor: selectedId === "normal" ? "#69c4f9" : isDark,
         }}
@@ -40,7 +40,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
               : require("@/assets/animation-icons/bicycle-classic.json")
           }
           autoPlay={true}
-          style={{ width: 50, height: 50, marginBottom: -5 }}
+          style={{ width: 40, height: 40, marginBottom: -7 }}
         />
 
         <Text style={{ color: isDarkText }}>Normal</Text>
@@ -50,9 +50,25 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
+          borderRadius: 12,
+          borderWidth: 1,
+          height: 60,
+          borderColor: selectedId === "all" ? "#17809e" : isDarkText,
+          backgroundColor: selectedId === "all" ? "#69c4f9" : isDark,
+        }}
+        onPress={() => setSelectedId("all")}
+        activeOpacity={0.8}
+      >
+        <Text style={{ color: isDarkText }}>All</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
           borderRadius: 10,
           borderWidth: 1,
-          height: 70,
+          height: 60,
           borderColor: selectedId === "electric" ? "#17809e" : isDarkText,
           backgroundColor: selectedId === "electric" ? "#69c4f9" : isDark,
         }}
@@ -63,7 +79,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           <AnimatedLottieView
             source={require("@/assets/animation-icons/bicycle-electric.json")}
             autoPlay={true}
-            style={{ width: 50, height: 50, marginBottom: -5 }}
+            style={{ width: 40, height: 40, marginBottom: -7 }}
           />
         </View>
         <Text style={{ color: isDarkText }}>Electric</Text>
@@ -74,13 +90,9 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 35,
     paddingBottom: StatusBar.currentHeight,
-  },
-  inputBlock: {
     flex: 1,
     flexDirection: "row",
     gap: 10,
-    zIndex: 1,
   },
 });

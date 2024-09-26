@@ -8,6 +8,8 @@ import {
   Dimensions,
   Image,
   RefreshControl,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { Colors } from "@/constants/Colors";
@@ -16,16 +18,18 @@ import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
 import { useDispatch, useSelector } from "react-redux";
 import { HStack, Skeleton, Center, Box } from "native-base";
 import { fetchProducts } from "@/toolkit/reducers/productSlice";
+const width = Dimensions.get("screen").width;
 
 export default function Bikes() {
   const colorScheme = useColorScheme();
   const isDark = Colors[useColorScheme() ?? "light"].background;
   const isDarkText = Colors[useColorScheme() ?? "light"].text;
   const [selectedId, setSelectedId] = useState<string | undefined>("all");
-  const width = Dimensions.get("screen").width;
   const itemRef = React.useRef(null);
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
+  const data = products.data.filter((item: any) => item.section === "Bikes");
+  const filtredData = data.filter((item: any) => item.category === selectedId);
 
   const renderItem = ({ item }: { item: any }) => (
     <View style={styles.item}>
@@ -34,7 +38,7 @@ export default function Bikes() {
         isLoaded={!products.loading}
         top={0}
         h={width / 2.5}
-        w={width}
+        w={width / 2}
       >
         <Image
           src={item.image[0]}
@@ -46,10 +50,11 @@ export default function Bikes() {
       <Skeleton.Text
         ref={itemRef}
         isLoaded={!products.loading}
-        flex={1}
-        alignContent={"center"}
-        lines={3}
+        height={width - (width / 2.5 + width / 2)}
+        lines={2}
         space={1.5}
+        w={width / 3.5}
+        alignItems={"center"}
       >
         <Text
           style={{
@@ -63,21 +68,24 @@ export default function Bikes() {
         </Text>
         <Text
           style={{
-            fontSize: 20,
-            color: isDarkText,
-          }}
-        >
-          {item.price} DT
-        </Text>
-        <Text
-          style={{
             fontSize: 16,
             color: isDarkText,
           }}
         >
-          description : {item.description}
+          {item.price} TND
         </Text>
       </Skeleton.Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: "#0086d1",
+          padding: 5,
+          borderRadius: 10,
+          marginTop: "auto",
+          flexGrow: 0,
+        }}
+      >
+        <Text style={{ color: "white" }}>view details</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -88,21 +96,20 @@ export default function Bikes() {
         backgroundColor: isDark,
         paddingBottom: StatusBar.currentHeight,
         height: "100%",
-        flex: 1,
-        flexDirection: "column",
       }}
       // contentContainerStyle={styles.container}
     >
       <ButtonBikeSwitch selectedId={selectedId} setSelectedId={setSelectedId} />
       <FlatList
-        initialNumToRender={10}
+        initialNumToRender={4}
         maxToRenderPerBatch={10}
-        data={products.data.filter((item: any) => item.category === selectedId)}
+        // onScrollEndDrag={()=>dispatch(fetchProducts() as any)}
+        data={selectedId === "all" ? data : filtredData}
         ref={itemRef}
         renderItem={renderItem}
         role="list"
         numColumns={2}
-        style={{ marginTop: 90, marginBottom: StatusBar.currentHeight }}
+        style={{ marginTop: 50, marginBottom: StatusBar.currentHeight }}
         keyExtractor={(item: any) => item.id}
         columnWrapperStyle={{ gap: 10 }}
         refreshControl={
@@ -111,6 +118,13 @@ export default function Bikes() {
             onRefresh={() => dispatch(fetchProducts() as any)}
           />
         }
+        ListEmptyComponent={() => (
+          <Text
+            style={{ color: isDarkText, alignSelf: "center", fontSize: 20 }}
+          >
+            no {selectedId} bikes
+          </Text>
+        )}
       />
     </SafeAreaView>
   );
@@ -146,4 +160,5 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     lineHeight: 30,
   },
+  button: {},
 });
