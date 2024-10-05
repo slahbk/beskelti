@@ -43,7 +43,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           style={{ width: 40, height: 40, marginBottom: -7 }}
         />
 
-        <Text style={{ color: isDarkText }}>Normal</Text>
+        <Text style={{ color: isDarkText, fontFamily: "Poppins_500Medium" }}>Normal</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{
@@ -59,7 +59,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
         onPress={() => setSelectedId("all")}
         activeOpacity={0.8}
       >
-        <Text style={{ color: isDarkText }}>All</Text>
+        <Text style={{ color: isDarkText, fontFamily: "Poppins_500Medium" }}>All</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{
@@ -82,7 +82,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
             style={{ width: 40, height: 40, marginBottom: -7 }}
           />
         </View>
-        <Text style={{ color: isDarkText }}>Electric</Text>
+        <Text style={{ color: isDarkText, fontFamily: "Poppins_500Medium" }}>Electric</Text>
       </TouchableOpacity>
     </View>
   );

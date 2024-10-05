@@ -13,6 +13,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Link } from "expo-router";
 import { useSelector } from "react-redux";
 import { HStack, Skeleton, Center, Box } from "native-base";
+import Animated, { LinearTransition } from "react-native-reanimated";
 
 export default function FlatLists({ data }: { data: any }) {
   const isDark = Colors[useColorScheme() ?? "light"].text;
@@ -55,10 +56,11 @@ export default function FlatLists({ data }: { data: any }) {
         >
           <Text
             style={{
-              fontSize: 20,
+              fontSize: 18,
               color: isDark,
               position: "absolute",
               bottom: 0,
+              fontFamily: "Poppins_500Medium_Italic",
             }}
           >
             {item.title}
@@ -71,26 +73,37 @@ export default function FlatLists({ data }: { data: any }) {
   return (
     <View>
       <View style={styles.titleBox}>
-        <Text style={{ color: isDark, fontWeight: "semibold", fontSize: 24 }}>
+        <Text
+          style={{
+            color: isDark,
+            fontFamily: "Poppins_600SemiBold_Italic",
+            fontSize: 20,
+          }}
+        >
           {data.title}
         </Text>
         <TouchableOpacity>
           <Link href={data.title}>
             <Text
-              style={{ color: isDark, fontWeight: "regular", fontSize: 16 }}
+              style={{
+                color: isDark,
+                fontFamily: "Poppins_300Light",
+                fontSize: 14,
+              }}
             >
               See all
             </Text>
           </Link>
         </TouchableOpacity>
       </View>
-      <FlatList
+      <Animated.FlatList
         data={data.data}
         renderItem={renderItem}
         horizontal
         ref={itemRef}
         showsHorizontalScrollIndicator={false}
         style={{ height: width / 2.5 }}
+        itemLayoutAnimation={LinearTransition}
       />
     </View>
   );

@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
+  RefreshControl,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -15,7 +16,8 @@ import ListTools from "@/components/ListTools";
 import { useEffect, useState } from "react";
 import { useFetchProduct } from "@/hooks/useFetchProduct";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "@/toolkit/reducers/productSlice";
+import { fetchProducts } from "@/redux/reducers/productSlice";
+import Animated from "react-native-reanimated";
 
 export default function HomeScreen() {
   const isDark = Colors[useColorScheme() ?? "light"].background;
@@ -27,17 +29,23 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ScrollView
+    <Animated.ScrollView
       showsVerticalScrollIndicator={false}
       style={{
         backgroundColor: isDark,
       }}
       contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={products.loading}
+          onRefresh={() => dispatch(fetchProducts() as any)}
+        />
+      }
     >
       <ListBikes />
       <ListAccessories />
       <ListTools />
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
 

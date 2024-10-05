@@ -17,7 +17,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
 import { useDispatch, useSelector } from "react-redux";
 import { HStack, Skeleton, Center, Box } from "native-base";
-import { fetchProducts } from "@/toolkit/reducers/productSlice";
+import { fetchProducts } from "@/redux/reducers/productSlice";
+import Animated, { LinearTransition } from "react-native-reanimated";
 const width = Dimensions.get("screen").width;
 
 export default function Bikes() {
@@ -28,8 +29,8 @@ export default function Bikes() {
   const itemRef = React.useRef(null);
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
-  const data = products.data.filter((item: any) => item.section === "Bikes");
-  const filtredData = data.filter((item: any) => item.category === selectedId);
+  const data = products?.data?.filter((item: any) => item.section === "Bikes");
+  const filtredData = data?.filter((item: any) => item.category === selectedId);
 
   const renderItem = ({ item }: { item: any }) => (
     <View style={styles.item}>
@@ -50,8 +51,8 @@ export default function Bikes() {
       <Skeleton.Text
         ref={itemRef}
         isLoaded={!products.loading}
-        height={width - (width / 2.5 + width / 2)}
-        lines={2}
+        h={"container"}
+        lines={3}
         space={1.5}
         w={width / 3.5}
         alignItems={"center"}
@@ -60,8 +61,9 @@ export default function Bikes() {
           style={{
             fontSize: 20,
             color: isDarkText,
-            fontWeight: "bold",
+            // fontWeight: "bold",
             marginBottom: 5,
+            fontFamily: "Poppins_600SemiBold_Italic",
           }}
         >
           {item.title}
@@ -70,10 +72,22 @@ export default function Bikes() {
           style={{
             fontSize: 16,
             color: isDarkText,
+            fontFamily: "Poppins_400Regular",
           }}
         >
           {item.price} TND
         </Text>
+        {selectedId === "all" && (
+          <Text
+            style={{
+              fontSize: 16,
+              color: isDarkText,
+              fontFamily: "Poppins_500Medium",
+            }}
+          >
+            category: {item.category}
+          </Text>
+        )}
       </Skeleton.Text>
       <TouchableOpacity
         style={{
@@ -100,7 +114,8 @@ export default function Bikes() {
       // contentContainerStyle={styles.container}
     >
       <ButtonBikeSwitch selectedId={selectedId} setSelectedId={setSelectedId} />
-      <FlatList
+      <Animated.FlatList
+        itemLayoutAnimation={LinearTransition}
         initialNumToRender={4}
         maxToRenderPerBatch={10}
         // onScrollEndDrag={()=>dispatch(fetchProducts() as any)}
@@ -120,7 +135,12 @@ export default function Bikes() {
         }
         ListEmptyComponent={() => (
           <Text
-            style={{ color: isDarkText, alignSelf: "center", fontSize: 20 }}
+            style={{
+              color: isDarkText,
+              alignSelf: "center",
+              fontSize: 22,
+              fontFamily: "Poppins_700Bold",
+            }}
           >
             no {selectedId} bikes
           </Text>
