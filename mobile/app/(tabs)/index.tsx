@@ -1,32 +1,40 @@
 import {
   StyleSheet,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
-  TouchableOpacity,
-  Text,
   RefreshControl,
+  Dimensions,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ListBikes from "@/components/ListBikes";
 import ListAccessories from "@/components/ListAccessories";
 import ListTools from "@/components/ListTools";
-import { useEffect, useState } from "react";
-import { useFetchProduct } from "@/hooks/useFetchProduct";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import Animated from "react-native-reanimated";
 
+const { width, height } = Dimensions.get('window');
+
 export default function HomeScreen() {
   const isDark = Colors[useColorScheme() ?? "light"].background;
   const dispatch = useDispatch();
-  const products = useSelector((state: any) => state.products);
+  const { loading, error } = useSelector((state: any) => state.products);
 
   useEffect(() => {
     dispatch(fetchProducts() as any);
-  }, []);
+  }, [dispatch]);
+
+  const handleRefresh = () => {
+    dispatch(fetchProducts() as any);
+  };
+
+  if (error) {
+    // You might want to add error handling here
+    console.error("Error fetching products:", error);
+  }
 
   return (
     <Animated.ScrollView
@@ -37,8 +45,8 @@ export default function HomeScreen() {
       contentContainerStyle={styles.container}
       refreshControl={
         <RefreshControl
-          refreshing={products.loading}
-          onRefresh={() => dispatch(fetchProducts() as any)}
+          refreshing={loading}
+          onRefresh={handleRefresh}
         />
       }
     >
@@ -51,18 +59,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 35,
+    gap: height * 0.04,
     paddingBottom: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+    paddingHorizontal: width * 0.02,
   },
 });

@@ -1,132 +1,136 @@
+import React, { useState, useEffect, useRef } from "react";
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
-  View,
   StatusBar,
-  FlatList,
   Dimensions,
   Image,
   RefreshControl,
-  Button,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Skeleton } from "native-base";
+import Animated, {
+  FadeIn,
+  LinearTransition,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
+
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
-import { useDispatch, useSelector } from "react-redux";
-import { HStack, Skeleton, Center, Box } from "native-base";
 import { fetchProducts } from "@/redux/reducers/productSlice";
-import Animated, { LinearTransition } from "react-native-reanimated";
-const width = Dimensions.get("screen").width;
+
+const { width, height } = Dimensions.get("window");
 
 export default function Bikes() {
   const colorScheme = useColorScheme();
-  const isDark = Colors[useColorScheme() ?? "light"].background;
-  const isDarkText = Colors[useColorScheme() ?? "light"].text;
-  const [selectedId, setSelectedId] = useState<string | undefined>("all");
-  const itemRef = React.useRef(null);
+  const isDark = Colors[colorScheme ?? "light"].background;
+  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const [selectedId, setSelectedId] = useState<string>("all");
+  const itemRef = useRef(null);
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
+  const [numColumns, setNumColumns] = useState(2);
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
+  useEffect(() => {
+    const updateLayout = () => {
+      const { width } = Dimensions.get("window");
+      setNumColumns(width > 600 ? 3 : 2);
+    };
+
+    const dimensionsHandler = Dimensions.addEventListener(
+      "change",
+      updateLayout
+    );
+    updateLayout();
+
+    return () => {
+      dimensionsHandler.remove();
+    };
+  }, []);
+
   const data = products?.data?.filter((item: any) => item.section === "Bikes");
-  const filtredData = data?.filter((item: any) => item.category === selectedId);
+  const filteredData =
+    selectedId === "all"
+      ? data
+      : data?.filter((item: any) => item.category === selectedId);
 
   const renderItem = ({ item }: { item: any }) => (
-    <View style={styles.item}>
+    <Animated.View
+      entering={FadeIn}
+      style={[styles.item, { width: width / numColumns - 15 }]}
+    >
       <Skeleton
         ref={itemRef}
         isLoaded={!products.loading}
-        top={0}
-        h={width / 2.5}
-        w={width / 2}
+        h={width / (numColumns * 1.5)}
+        w="100%"
       >
         <Image
-          src={item.image[0]}
-          alt={item.title}
-          style={{ width: "100%", height: width / 2.5 }}
+          source={{ uri: item.image[0] }}
+          style={styles.image}
           resizeMode="contain"
         />
       </Skeleton>
       <Skeleton.Text
         ref={itemRef}
         isLoaded={!products.loading}
-        h={"container"}
         lines={3}
         space={1.5}
-        w={width / 3.5}
-        alignItems={"center"}
+        w="90%"
+        alignItems="center"
       >
         <Text
-          style={{
-            fontSize: 20,
-            color: isDarkText,
-            // fontWeight: "bold",
-            marginBottom: 5,
-            fontFamily: "Poppins_600SemiBold_Italic",
-          }}
+          style={[styles.title, { color: isDarkText }]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
         >
           {item.title}
         </Text>
-        <Text
-          style={{
-            fontSize: 16,
-            color: isDarkText,
-            fontFamily: "Poppins_400Regular",
-          }}
-        >
+        <Text style={[styles.text, { color: isDarkText }]}>
           {item.price} TND
         </Text>
         {selectedId === "all" && (
-          <Text
-            style={{
-              fontSize: 16,
-              color: isDarkText,
-              fontFamily: "Poppins_500Medium",
-            }}
-          >
+          <Text style={[styles.text, { color: isDarkText }]}>
             category: {item.category}
           </Text>
         )}
       </Skeleton.Text>
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#0086d1",
-          padding: 5,
-          borderRadius: 10,
-          marginTop: "auto",
-          flexGrow: 0,
-        }}
-      >
-        <Text style={{ color: "white" }}>view details</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>view details</Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 
   return (
-    <SafeAreaView
-      // showsVerticalScrollIndicator={false}
-      style={{
-        backgroundColor: isDark,
-        paddingBottom: StatusBar.currentHeight,
-        height: "100%",
-      }}
-      // contentContainerStyle={styles.container}
+    <Animated.View
+      entering={FadeIn}
+      style={[styles.container, { backgroundColor: isDark }]}
     >
-      <ButtonBikeSwitch selectedId={selectedId} setSelectedId={setSelectedId} />
+      <ButtonBikeSwitch
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
+        scrollY={scrollY}
+      />
       <Animated.FlatList
         itemLayoutAnimation={LinearTransition}
         initialNumToRender={4}
         maxToRenderPerBatch={10}
-        // onScrollEndDrag={()=>dispatch(fetchProducts() as any)}
-        data={selectedId === "all" ? data : filtredData}
+        data={filteredData}
         ref={itemRef}
         renderItem={renderItem}
-        role="list"
-        numColumns={2}
-        style={{ marginTop: 50, marginBottom: StatusBar.currentHeight }}
+        numColumns={numColumns}
         keyExtractor={(item: any) => item.id}
-        columnWrapperStyle={{ gap: 10 }}
+        contentContainerStyle={styles.flatListContent}
         refreshControl={
           <RefreshControl
             refreshing={products.loading}
@@ -134,51 +138,64 @@ export default function Bikes() {
           />
         }
         ListEmptyComponent={() => (
-          <Text
-            style={{
-              color: isDarkText,
-              alignSelf: "center",
-              fontSize: 22,
-              fontFamily: "Poppins_700Bold",
-            }}
-          >
-            no {selectedId} bikes
+          <Text style={[styles.emptyText, { color: isDarkText }]}>
+            No {selectedId === "all" ? "" : selectedId} bikes
           </Text>
         )}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
       />
-    </SafeAreaView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 35,
+    flex: 1,
     paddingBottom: StatusBar.currentHeight,
   },
-  inputBlock: {
-    flex: 1,
-    flexDirection: "row",
-    gap: 10,
+  flatListContent: {
+    padding: 10,
+    paddingBottom: StatusBar.currentHeight,
   },
   item: {
-    zIndex: 10,
-    flex: 1,
     borderWidth: 0.5,
-    marginBottom: 20,
-    gap: 3,
+    borderRadius: 8,
+    marginBottom: 15,
+    marginHorizontal: 2,
+    padding: 8,
     alignItems: "center",
-    justifyContent: "center",
-    width: Dimensions.get("screen").width,
-    height: "auto",
+    justifyContent: "space-between",
+    height: height * 0.35,
+  },
+  image: {
+    width: "100%",
+    height: "50%",
   },
   text: {
     fontSize: 14,
-    lineHeight: 32,
+    fontFamily: "Poppins_400Regular",
   },
   title: {
-    fontSize: 30,
-    fontWeight: "semibold",
-    lineHeight: 30,
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold_Italic",
+    marginBottom: 5,
   },
-  button: {},
+  button: {
+    backgroundColor: "#0086d1",
+    padding: 8,
+    borderRadius: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontFamily: "Poppins_500Medium",
+  },
+  emptyText: {
+    alignSelf: "center",
+    marginTop: height * 0.2,
+    fontSize: 22,
+    fontFamily: "Poppins_700Bold",
+  },
 });

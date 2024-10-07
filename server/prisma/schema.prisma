@@ -5,17 +5,17 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model Product {
   id          Int       @default(autoincrement()) @id
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  title       String    @db.VarChar(20)
+  title       String    @db.VarChar(30)
   description String    @db.Text
-  category    String    @db.VarChar(10)
-  section     String    @db.VarChar(10)
+  category    String    @db.VarChar(15)
+  section     String    @db.VarChar(15)
   price       String    @db.VarChar(10)
   user        User      @relation(fields: [userId], references: [id])
   userId      Int

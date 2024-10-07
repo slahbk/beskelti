@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import {
   CheckIcon,
@@ -14,23 +14,20 @@ export default function InputSectionCategory({ data, setData }: any) {
   const isDarkText = Colors[useColorScheme() ?? "light"].text;
 
   return (
-    <>
+    <View style={styles.container}>
       <FormControl
-        w="85%"
-        maxW="container"
+        style={styles.formControl}
         isRequired
         isInvalid={!data.section}
       >
         <FormControl.Label>Choose Section</FormControl.Label>
         <Select
-          minWidth="200"
           accessibilityLabel="Choose Section"
           placeholder="Choose Section"
           _selectedItem={{
             bg: "teal.600",
             endIcon: <CheckIcon size={3} />,
           }}
-          mt="1"
           onValueChange={(value: any) => setData({ ...data, section: value })}
           color={isDarkText}
         >
@@ -46,21 +43,18 @@ export default function InputSectionCategory({ data, setData }: any) {
       </FormControl>
       {data.section === "Bikes" && (
         <FormControl
-          w="85%"
-          maxW="container"
+          style={styles.formControl}
           isRequired
           isInvalid={!data.category}
         >
           <FormControl.Label>Choose Category</FormControl.Label>
           <Select
-            minWidth="200"
-            accessibilityLabel="Choose Section"
-            placeholder="Choose Section"
+            accessibilityLabel="Choose Category"
+            placeholder="Choose Category"
             _selectedItem={{
               bg: "teal.600",
               endIcon: <CheckIcon size={2} />,
             }}
-            mt="1"
             onValueChange={(value: any) =>
               setData({ ...data, category: value })
             }
@@ -79,8 +73,16 @@ export default function InputSectionCategory({ data, setData }: any) {
           )}
         </FormControl>
       )}
-    </>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "90%",
+  },
+  formControl: {
+    marginBottom: 16,
+  },
+});
