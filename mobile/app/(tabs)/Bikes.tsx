@@ -16,7 +16,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-
+import { Link } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
@@ -67,7 +67,7 @@ export default function Bikes() {
   const renderItem = ({ item }: { item: any }) => (
     <Animated.View
       entering={FadeIn}
-      style={[styles.item, { width: width / numColumns - 15 }]}
+      style={[styles.item, { width: width / numColumns - 15, borderColor: isDarkText }]}
     >
       <Skeleton
         ref={itemRef}
@@ -79,6 +79,7 @@ export default function Bikes() {
           source={{ uri: item.image[0] }}
           style={styles.image}
           resizeMode="contain"
+          resizeMethod="scale"
         />
       </Skeleton>
       <Skeleton.Text
@@ -105,8 +106,15 @@ export default function Bikes() {
           </Text>
         )}
       </Skeleton.Text>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>view details</Text>
+      <TouchableOpacity activeOpacity={0.7} style={styles.button}>
+        <Link
+          href={{
+            pathname: "/product/[data]",
+            params: { data: JSON.stringify(item) },
+          }}
+        >
+          <Text style={styles.buttonText}>view details</Text>
+        </Link>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -157,16 +165,17 @@ const styles = StyleSheet.create({
   flatListContent: {
     padding: 10,
     paddingBottom: StatusBar.currentHeight,
+    alignItems: "center",
   },
   item: {
     borderWidth: 0.5,
     borderRadius: 8,
     marginBottom: 15,
     marginHorizontal: 2,
-    padding: 8,
+    padding: 6,
     alignItems: "center",
     justifyContent: "space-between",
-    height: height * 0.35,
+    height: height * 0.34,
   },
   image: {
     width: "100%",

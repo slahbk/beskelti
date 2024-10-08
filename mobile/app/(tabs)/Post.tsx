@@ -9,7 +9,7 @@ import {
   Pressable,
   ToastAndroid,
   Dimensions,
-  Linking,
+  ActivityIndicator,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
@@ -38,21 +38,23 @@ export default function Post() {
     category: "",
     description: "",
     image: [],
-    userId: 0,
+    userId: 1,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const userId = SecureStore.getItem("userId");
-    const token = SecureStore.getItem("token");
-    if (!token) {
-      Redirect({ href: "/" });
-    }
-    if (userId) {
-      setProductData({ ...productData, userId: parseInt(userId) });
-    }
-  }, []);
+  // useEffect(() => {
+  //   const userId = SecureStore.getItem("userId");
+  //   const token = SecureStore.getItem("token");
+  //   if (!token) {
+  //     Redirect({ href: "/" });
+  //   }
+  //   if (userId) {
+  //     setProductData({ ...productData, userId: parseInt(userId) });
+  //   }
+  // }, []);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     try {
       console.log(productData.image);
       await axios.post(`${API_BASE_URL}/product/add`, productData);
@@ -62,10 +64,11 @@ export default function Post() {
       console.error("Error adding product:", error);
       ToastAndroid.show("Failed to add product", ToastAndroid.BOTTOM);
     }
-    const id = "8";
-    const token = "lisbfvilqerjk-----sdfvefdv-------_sbviulsbvhhsfv";
-    SecureStore.setItemAsync("userId", id);
-    SecureStore.setItemAsync("token", token);
+    setIsLoading(false);
+    // const id = "8";
+    // const token = "lisbfvilqerjk-----sdfvefdv-------_sbviulsbvhhsfv";
+    // SecureStore.setItemAsync("userId", id);
+    // SecureStore.setItemAsync("token", token);
   };
 
   const resetForm = () => {
@@ -194,7 +197,11 @@ export default function Post() {
             productData.image?.length === 0
           }
         >
-          <Text style={styles.buttonText}>Submit</Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Submit</Text>
+          )}
         </Button>
         <Button
           w={{

@@ -3,4 +3,6 @@ export type UserType = {
   fullName: string;
   email: string;
   token: string;
+  company: string;
+  products: []
 };

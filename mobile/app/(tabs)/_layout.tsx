@@ -46,7 +46,7 @@ export default function TabLayout() {
                       ? require("@/assets/animation-icons/home-dark.json")
                       : require("@/assets/animation-icons/home.json")
                   }
-                  autoPlay={focused}
+                  focused={focused}
                 />
               ),
             }}
@@ -62,7 +62,7 @@ export default function TabLayout() {
                       ? require("@/assets/animation-icons/bicycle-dark.json")
                       : require("@/assets/animation-icons/bicycle.json")
                   }
-                  autoPlay={focused}
+                  focused={focused}
                 />
               ),
             }}
@@ -78,7 +78,7 @@ export default function TabLayout() {
                       ? require("@/assets/animation-icons/add-dark.json")
                       : require("@/assets/animation-icons/add.json")
                   }
-                  autoPlay={focused}
+                  focused={focused}
                 />
               ),
             }}
@@ -94,7 +94,7 @@ export default function TabLayout() {
                       ? require("@/assets/animation-icons/accessoires-dark.json")
                       : require("@/assets/animation-icons/accessoires.json")
                   }
-                  autoPlay={focused}
+                  focused={focused}
                 />
               ),
             }}
@@ -110,7 +110,7 @@ export default function TabLayout() {
                       ? require("@/assets/animation-icons/tool-dark.json")
                       : require("@/assets/animation-icons/tool.json")
                   }
-                  autoPlay={focused}
+                  focused={focused}
                 />
               ),
             }}

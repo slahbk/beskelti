@@ -16,14 +16,14 @@ import { HStack, Skeleton, Center, Box } from "native-base";
 import Animated, { LinearTransition } from "react-native-reanimated";
 
 export default function FlatLists({ data }: { data: any }) {
-  const isDark = Colors[useColorScheme() ?? "light"].text;
+  const isDarkText = Colors[useColorScheme() ?? "light"].text;
   const width = Dimensions.get("screen").width;
   const itemRef = React.useRef(null);
   const loading = useSelector((state: any) => state.products.loading);
 
   const renderItem = ({ item }: { item: any }) => {
     return (
-      <Box style={styles.item} key={item.id}>
+      <Box style={[styles.item, { borderColor: isDarkText }]} key={item.id}>
         <Skeleton
           ref={itemRef}
           isLoaded={!loading}
@@ -57,7 +57,7 @@ export default function FlatLists({ data }: { data: any }) {
           <Text
             style={{
               fontSize: 18,
-              color: isDark,
+              color: isDarkText,
               position: "absolute",
               bottom: 0,
               fontFamily: "Poppins_500Medium_Italic",
@@ -75,7 +75,7 @@ export default function FlatLists({ data }: { data: any }) {
       <View style={styles.titleBox}>
         <Text
           style={{
-            color: isDark,
+            color: isDarkText,
             fontFamily: "Poppins_600SemiBold_Italic",
             fontSize: 20,
           }}
@@ -86,7 +86,7 @@ export default function FlatLists({ data }: { data: any }) {
           <Link href={data.title}>
             <Text
               style={{
-                color: isDark,
+                color: isDarkText,
                 fontFamily: "Poppins_300Light",
                 fontSize: 14,
               }}

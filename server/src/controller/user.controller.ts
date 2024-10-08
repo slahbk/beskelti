@@ -21,7 +21,7 @@ export class UserController {
 
   @Get(':id')
   async getUser(@Param('id') id: number) {
-    return await this.userService.getUser({ id: Number(id) });
+    return await this.userService.getUser(Number(id));
   }
 
   @Post('signup')
