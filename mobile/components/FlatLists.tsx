@@ -1,3 +1,4 @@
+import React, { useCallback } from "react";
 import {
   Dimensions,
   Image,
@@ -5,92 +6,80 @@ import {
   Text,
   TouchableOpacity,
   View,
-  FlatList,
 } from "react-native";
-import React from "react";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Link } from "expo-router";
 import { useSelector } from "react-redux";
-import { HStack, Skeleton, Center, Box } from "native-base";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import { Skeleton } from "native-base";
+import Animated, { FadeInRight, LinearTransition } from "react-native-reanimated";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export default function FlatLists({ data }: { data: any }) {
-  const isDarkText = Colors[useColorScheme() ?? "light"].text;
-  const width = Dimensions.get("screen").width;
+
+  const colorScheme = useColorScheme();
+  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const isDarkBackground = Colors[colorScheme ?? "light"].background;
   const itemRef = React.useRef(null);
   const loading = useSelector((state: any) => state.products.loading);
 
-  const renderItem = ({ item }: { item: any }) => {
+  const renderItem = useCallback(({ item, index }: { item: any; index: number }) => {
+    const itemWidth = SCREEN_WIDTH * 0.4;
+    const itemHeight = itemWidth * 1.2;
+
     return (
-      <Box style={[styles.item, { borderColor: isDarkText }]} key={item.id}>
+      <Animated.View
+        entering={FadeInRight.delay(index * 100)}
+        style={[
+          styles.item,
+          {
+            width: itemWidth,
+            height: itemHeight,
+            backgroundColor: isDarkBackground,
+            borderColor: isDarkText,
+          },
+        ]}
+      >
         <Skeleton
-          ref={itemRef}
           isLoaded={!loading}
-          top={0}
-          h={width / 3.5}
-          w={width / 2.5}
-          position={"absolute"}
-          borderRadius={5}
+          h="70%"
+          w="100%"
+          borderRadius={10}
         >
           <Image
-            src={item.image[0]}
-            alt={item.title}
-            style={{
-              width: width / 2.5,
-              height: width / 3.5,
-              position: "absolute",
-              top: 0,
-            }}
-            resizeMode="stretch"
-            borderRadius={5}
+            source={{ uri: item.image[0] }}
+            style={[styles.image, { height: itemHeight * 0.6 }]}
+            resizeMode="contain"
           />
         </Skeleton>
         <Skeleton.Text
-          ref={itemRef}
           isLoaded={!loading}
-          position={"absolute"}
-          bottom={1}
           lines={1}
-          lineHeight={50}
+          w="90%"
+          mt={2}
         >
           <Text
-            style={{
-              fontSize: 18,
-              color: isDarkText,
-              position: "absolute",
-              bottom: 0,
-              fontFamily: "Poppins_500Medium_Italic",
-            }}
+            style={[styles.itemTitle, { color: isDarkText }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
             {item.title}
           </Text>
         </Skeleton.Text>
-      </Box>
+      </Animated.View>
     );
-  };
+  }, [loading, isDarkText, isDarkBackground]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.titleBox}>
-        <Text
-          style={{
-            color: isDarkText,
-            fontFamily: "Poppins_600SemiBold_Italic",
-            fontSize: 20,
-          }}
-        >
+        <Text style={[styles.sectionTitle, { color: isDarkText }]}>
           {data.title}
         </Text>
         <TouchableOpacity>
           <Link href={data.title}>
-            <Text
-              style={{
-                color: isDarkText,
-                fontFamily: "Poppins_300Light",
-                fontSize: 14,
-              }}
-            >
+            <Text style={[styles.seeAllText, { color: isDarkText }]}>
               See all
             </Text>
           </Link>
@@ -100,39 +89,61 @@ export default function FlatLists({ data }: { data: any }) {
         data={data.data}
         renderItem={renderItem}
         horizontal
-        ref={itemRef}
         showsHorizontalScrollIndicator={false}
-        style={{ height: width / 2.5 }}
+        contentContainerStyle={styles.flatListContent}
         itemLayoutAnimation={LinearTransition}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: 14,
-    lineHeight: 32,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "semibold",
-    lineHeight: 30,
+  container: {
+    marginVertical: 4,
   },
   titleBox: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginHorizontal: 5,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  sectionTitle: {
+    fontFamily: "Poppins_600SemiBold",
+    fontSize: 20,
+  },
+  seeAllText: {
+    fontFamily: "Poppins_400Regular",
+    fontSize: 14,
+  },
+  flatListContent: {
+    // paddingHorizontal: 10,
   },
   item: {
-    flex: 1,
-    borderWidth: 0.5,
-    borderStyle: "solid",
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
     marginHorizontal: 5,
-    width: Dimensions.get("screen").width / 2.5,
+    padding: 6,
+    justifyContent: "space-around",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  image: {
+    width: "100%",
+    borderRadius: 10,
+  },
+  itemTitle: {
+    fontFamily: "Poppins_500Medium",
+    fontSize: 16,
+    alignSelf: "center",
+    marginTop: 2,
+    textAlign: "center",
   },
 });

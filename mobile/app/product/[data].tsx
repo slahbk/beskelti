@@ -58,7 +58,7 @@ export default function ProductDetails() {
           Buyer: {user?.fullName}
         </Text>
         <Text style={[styles.buyer, { color: isDarkText }]}>
-          Number of products: {user?.products.length}
+          {user?.fullName} has {user?.products.length} products
         </Text>
       </View>
       <Text style={[styles.description, { color: isDarkText }]}>
