@@ -134,11 +134,9 @@ export default function Accessories() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: StatusBar.currentHeight,
   },
   flatListContent: {
     padding: 10,
-    paddingBottom: StatusBar.currentHeight,
   },
   item: {
     borderWidth: 0.5,

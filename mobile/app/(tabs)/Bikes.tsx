@@ -13,14 +13,16 @@ import { Skeleton } from "native-base";
 import Animated, {
   FadeIn,
   LinearTransition,
+  runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
 import { fetchProducts } from "@/redux/reducers/productSlice";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,12 +35,28 @@ export default function Bikes() {
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
   const [numColumns, setNumColumns] = useState(2);
-  const scrollY = useSharedValue(0);
+  const scrollOffset = useSharedValue(0);
+  const navigation = useNavigation();
+  const TabBarHeight = useBottomTabBarHeight();
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
-    },
+  const updateScrollOffset = () => {
+    let newMarginTop = 0;
+    if (scrollOffset.value >= 0 && scrollOffset.value <= TabBarHeight) {
+      newMarginTop = -scrollOffset.value;
+    } else if (scrollOffset.value >= TabBarHeight) {
+      newMarginTop = -TabBarHeight;
+    }
+    console.log("newMarginTop", newMarginTop);
+    navigation.setOptions({
+      tabBarStyle: {
+        marginBottom: newMarginTop,
+      },
+    });
+  };
+
+  const scrollHandler = ((event: any) => {
+    scrollOffset.value = event.nativeEvent.contentOffset.y;
+    runOnJS(updateScrollOffset)();
   });
 
   useEffect(() => {
@@ -121,13 +139,12 @@ export default function Bikes() {
 
   return (
     <Animated.View
-      entering={FadeIn}
       style={[styles.container, { backgroundColor: isDark }]}
     >
       <ButtonBikeSwitch
         selectedId={selectedId}
         setSelectedId={setSelectedId}
-        scrollY={scrollY}
+        scrollOffset={scrollOffset}
       />
       <Animated.FlatList
         itemLayoutAnimation={LinearTransition}
@@ -160,7 +177,6 @@ export default function Bikes() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: StatusBar.currentHeight,
   },
   flatListContent: {
     padding: 10,

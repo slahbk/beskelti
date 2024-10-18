@@ -1,13 +1,10 @@
-import { API_BASE_URL } from "@/constants/ApiConfig";
+import { IP_ADDRESS } from "@/constants/ApiConfig";
+import { useFetchProduct } from "@/hooks/useFetchProduct";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async () => {
-    const response = await axios(`${API_BASE_URL}/product`);
-    return response.data;
-  }
+  useFetchProduct
 );
 
 export const productSlice = createSlice({

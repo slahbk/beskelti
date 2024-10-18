@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import {
   Dimensions,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,64 +13,67 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Link } from "expo-router";
 import { useSelector } from "react-redux";
 import { Skeleton } from "native-base";
-import Animated, { FadeInRight, LinearTransition } from "react-native-reanimated";
+import Animated, {
+  FadeInRight,
+  LinearTransition,
+} from "react-native-reanimated";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function FlatLists({ data }: { data: any }) {
-
   const colorScheme = useColorScheme();
   const isDarkText = Colors[colorScheme ?? "light"].text;
   const isDarkBackground = Colors[colorScheme ?? "light"].background;
   const itemRef = React.useRef(null);
   const loading = useSelector((state: any) => state.products.loading);
 
-  const renderItem = useCallback(({ item, index }: { item: any; index: number }) => {
-    const itemWidth = SCREEN_WIDTH * 0.4;
-    const itemHeight = itemWidth * 1.2;
+  const renderItem = useCallback(
+    ({ item, index }: { item: any; index: number }) => {
+      const itemWidth = SCREEN_WIDTH * 0.4;
+      const itemHeight = itemWidth * 1.2;
 
-    return (
-      <Animated.View
-        entering={FadeInRight.delay(index * 100)}
-        style={[
-          styles.item,
-          {
-            width: itemWidth,
-            height: itemHeight,
-            backgroundColor: isDarkBackground,
-            borderColor: isDarkText,
-          },
-        ]}
-      >
-        <Skeleton
-          isLoaded={!loading}
-          h="70%"
-          w="100%"
-          borderRadius={10}
+      return (
+        <Animated.View
+          entering={FadeInRight.delay(index * 100)}
+          style={[
+            styles.item,
+            {
+              width: itemWidth,
+              height: itemHeight,
+              backgroundColor: isDarkBackground,
+              borderColor: isDarkText,
+            },
+          ]}
         >
-          <Image
-            source={{ uri: item.image[0] }}
-            style={[styles.image, { height: itemHeight * 0.6 }]}
-            resizeMode="contain"
-          />
-        </Skeleton>
-        <Skeleton.Text
-          isLoaded={!loading}
-          lines={1}
-          w="90%"
-          mt={2}
-        >
-          <Text
-            style={[styles.itemTitle, { color: isDarkText }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {item.title}
-          </Text>
-        </Skeleton.Text>
-      </Animated.View>
-    );
-  }, [loading, isDarkText, isDarkBackground]);
+          <Link
+            style={styles.link}
+            href={{
+              pathname: "/product/[data]",
+              params: { data: JSON.stringify(item) },
+            }}
+          ></Link>
+
+          <Skeleton isLoaded={!loading} h="70%" w="100%" borderRadius={10}>
+            <Image
+              source={{ uri: item.image[0] }}
+              style={[styles.image, { height: itemHeight * 0.6 }]}
+              resizeMode="contain"
+            />
+          </Skeleton>
+          <Skeleton.Text isLoaded={!loading} lines={1} w="90%" mt={2}>
+            <Text
+              style={[styles.itemTitle, { color: isDarkText }]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {item.title}
+            </Text>
+          </Skeleton.Text>
+        </Animated.View>
+      );
+    },
+    [loading, isDarkBackground]
+  );
 
   return (
     <View style={styles.container}>
@@ -145,5 +149,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 2,
     textAlign: "center",
+  },
+  link: {
+    backgroundColor: "transparent",
+    position: "absolute",
+    zIndex: 100,
+    width: "100%",
+    height: "100%",
   },
 });

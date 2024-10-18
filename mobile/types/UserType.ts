@@ -4,5 +4,7 @@ export type UserType = {
   email: string;
   token: string;
   company: string;
+  avatar: string;
+  phone: string;
   products: []
 };

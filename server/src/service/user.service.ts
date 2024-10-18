@@ -15,6 +15,8 @@ export class UserService {
         id: true,
         fullName: true,
         products: true,
+        avatar: true,
+        phone: true,
       },
       where: { id: id },
     });

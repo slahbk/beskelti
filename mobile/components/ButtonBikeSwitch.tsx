@@ -19,7 +19,7 @@ import Animated, {
 
 const { width } = Dimensions.get('window');
 
-export default function ButtonBikeSwitch({ selectedId, setSelectedId, scrollY }: any) {
+export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"].background;
   const isDarkText = Colors[colorScheme ?? "light"].text;
@@ -27,26 +27,6 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId, scrollY }:
 
   const buttonWidth = width * 0.3; // 30% of screen width
   const buttonHeight = width * 0.15; // 15% of screen width
-
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    opacity.value = withTiming(1, { duration: 500 });
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 100],
-      [0, -100],
-      Extrapolation.CLAMP
-    );
-
-    return {
-      opacity: opacity.value,
-      transform: [{ translateY }],
-    };
-  });
 
   const renderButton = (id: string, label: string, icon?: React.ReactNode) => (
     <TouchableOpacity
@@ -68,7 +48,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId, scrollY }:
   );
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View style={styles.container}>
       {renderButton(
         "normal",
         "Normal",

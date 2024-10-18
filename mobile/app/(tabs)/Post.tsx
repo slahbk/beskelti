@@ -7,7 +7,6 @@ import {
   Image,
   Platform,
   Pressable,
-  ToastAndroid,
   Dimensions,
   ActivityIndicator,
 } from "react-native";
@@ -21,26 +20,46 @@ import * as ImagePicker from "expo-image-picker";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
 import axios from "axios";
-import { API_BASE_URL } from "@/constants/ApiConfig";
-import * as SecureStore from "expo-secure-store";
-import { Link, Redirect } from "expo-router";
-
+import {
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_CLOUD_NAME,
+  IP_ADDRESS,
+} from "@/constants/ApiConfig";
+import ToastManager, { Toast } from "toastify-react-native";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { upload } from "cloudinary-react-native";
+import Loading from "@/components/Loading";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "@/redux/reducers/productSlice";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+const myCld = new Cloudinary({
+  cloud: {
+    cloudName: CLOUDINARY_CLOUD_NAME,
+    apiKey: CLOUDINARY_API_KEY,
+    apiSecret: CLOUDINARY_API_SECRET,
+  },
+});
 
 export default function Post() {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"].background;
   const isDarkText = Colors[colorScheme ?? "light"].text;
+  const dispatch = useDispatch();
   const [productData, setProductData] = useState<ProductType>({
-    title: "",
-    price: "",
-    section: "",
+    title: "test",
+    price: "20",
+    section: "Tools",
     category: "",
-    description: "",
+    description: "test",
     image: [],
     userId: 1,
   });
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [fixedProgress, setFixedProgress] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   // useEffect(() => {
   //   const userId = SecureStore.getItem("userId");
@@ -56,19 +75,60 @@ export default function Post() {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      console.log(productData.image);
-      await axios.post(`${API_BASE_URL}/product/add`, productData);
-      ToastAndroid.show("Product Added Successfully", ToastAndroid.BOTTOM);
-      resetForm();
+      productData.image?.forEach(async (image) => {
+        await upload(myCld, {
+          file: image,
+          options: {
+            overwrite: true,
+            invalidate: false,
+            folder: "beskelti app",
+          },
+          callback: async (err, result) => {
+            if (err) {
+              Toast.error("Error uploading image");
+              setUploadedImages([]);
+              productData.image = [];
+              setIsLoading(false);
+              resetProgress();
+              return;
+            } else if (result) {
+              uploadedImages.push(result.secure_url);
+              setProgress((prevProgress) => prevProgress + 1);
+              if (
+                uploadedImages &&
+                productData.image &&
+                uploadedImages.length === productData.image.length
+              ) {
+                console.log("All images uploaded successfully");
+                handleUpload();
+              }
+            }
+          },
+        });
+      });
     } catch (error) {
-      console.error("Error adding product:", error);
-      ToastAndroid.show("Failed to add product", ToastAndroid.BOTTOM);
+      setIsLoading(false);
+      resetProgress();
+      productData.image = [];
+      Toast.error("Failed to add product");
+      setUploadedImages([]);
     }
-    setIsLoading(false);
     // const id = "8";
     // const token = "lisbfvilqerjk-----sdfvefdv-------_sbviulsbvhhsfv";
     // SecureStore.setItemAsync("userId", id);
     // SecureStore.setItemAsync("token", token);
+  };
+
+  const handleUpload = async () => {
+    setTimeout(async () => {
+      productData.image = uploadedImages;
+      await axios.post(`${IP_ADDRESS}/product/add`, productData);
+      setIsLoading(false);
+      Toast.success("Product Added Successfully");
+      resetForm();
+      resetProgress();
+      dispatch(fetchProducts() as any);
+    }, 1000);
   };
 
   const resetForm = () => {
@@ -81,6 +141,12 @@ export default function Post() {
       image: [],
       userId: 1,
     });
+    setUploadedImages([]);
+  };
+
+  const resetProgress = () => {
+    setFixedProgress(0);
+    setProgress(0);
   };
 
   const pickImage = async (useCamera: boolean) => {
@@ -91,7 +157,7 @@ export default function Post() {
       const { status } = await permissionMethod();
 
       if (status !== "granted") {
-        ToastAndroid.show("Permission denied", ToastAndroid.BOTTOM);
+        Toast.error("Permission denied");
         return;
       }
 
@@ -112,7 +178,7 @@ export default function Post() {
 
       if (!result.canceled && result.assets) {
         const newImageUris = result.assets.map((asset) => asset.uri);
-
+        setFixedProgress(prevProgress => prevProgress + newImageUris.length);
         setProductData((prevData) => ({
           ...prevData,
           image: prevData.image
@@ -122,7 +188,7 @@ export default function Post() {
       }
     } catch (error) {
       console.error("Error picking image:", error);
-      ToastAndroid.show("Failed to pick image", ToastAndroid.BOTTOM);
+      Toast.error("Failed to pick image");
     }
   };
   const removeImage = (index: number) => {
@@ -135,131 +201,135 @@ export default function Post() {
   };
 
   return (
-    <Animated.ScrollView
-      contentContainerStyle={styles.container}
-      style={{ backgroundColor: isDark }}
-      showsVerticalScrollIndicator={true}
-    >
-      <VStack space={4} w="100%" alignItems="center">
-        <Input
-          w={{
-            base: "90%",
-            md: "70%",
-            lg: "50%",
-          }}
-          placeholder="Title"
-          color={isDarkText}
-          value={productData.title}
-          onChangeText={(text) =>
-            setProductData({ ...productData, title: text })
-          }
-          InputLeftElement={
-            <Icon
-              as={<MaterialIcons name="pedal-bike" />}
-              size={5}
-              ml="2"
-              color="muted.400"
-            />
-          }
-          fontFamily={"body"}
-        />
-        <InputSectionCategory data={productData} setData={setProductData} />
-        <TextArea
-          autoCompleteType={"off"}
-          h={SCREEN_HEIGHT * 0.15}
-          placeholder="Description..."
-          w={{
-            base: "90%",
-            md: "70%",
-            lg: "50%",
-          }}
-          maxW="container"
-          value={productData.description}
-          onChangeText={(text) =>
-            setProductData({ ...productData, description: text })
-          }
-          color={isDarkText}
-        />
-        <InputPriceButton data={productData} setData={setProductData} />
-        <Button
-          w={{
-            base: "90%",
-            md: "70%",
-            lg: "50%",
-          }}
-          colorScheme="blue"
-          onPress={handleSubmit}
-          isDisabled={
-            productData.title === "" ||
-            productData.price === "" ||
-            productData.section === "" ||
-            (productData.section === "Bikes" && productData.category === "") ||
-            productData.image?.length === 0
-          }
-        >
-          {isLoading ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <Text style={styles.buttonText}>Submit</Text>
-          )}
-        </Button>
-        <Button
-          w={{
-            base: "90%",
-            md: "70%",
-            lg: "50%",
-          }}
-          colorScheme="blue"
-          onPress={() => pickImage(true)}
-        >
-          <Text style={styles.buttonText}>Take Photo</Text>
-        </Button>
-        <Button
-          w={{
-            base: "90%",
-            md: "70%",
-            lg: "50%",
-          }}
-          colorScheme="blue"
-          onPress={() => pickImage(false)}
-        >
-          <Text style={styles.buttonText}>Pick from Gallery</Text>
-        </Button>
-        {productData.image && productData.image.length > 0 && (
-          <Animated.FlatList
-            data={productData.image}
-            horizontal
-            renderItem={({ item, index }) => (
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={{ uri: item }}
-                  resizeMode="cover"
-                  style={styles.image}
-                  alt={`Selected image ${index + 1}`}
-                />
-                <Pressable
-                  style={styles.deleteButton}
-                  onPress={() => removeImage(index)}
-                >
-                  <Ionicons
-                    name="trash-outline"
-                    size={SCREEN_WIDTH * 0.05}
-                    color="red"
-                  />
-                </Pressable>
-              </View>
-            )}
-            keyExtractor={(item, index) => `${item}-${index}`}
+    <>
+      {isLoading && <Loading progress={(progress / fixedProgress) * 10} />}
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        style={{ backgroundColor: isDark }}
+        showsVerticalScrollIndicator={true}
+      >
+        <ToastManager textStyle={styles.toastText} position="top" />
+        <VStack space={4} w="100%" alignItems="center">
+          <Input
+            w={{
+              base: "90%",
+              md: "70%",
+              lg: "50%",
+            }}
+            placeholder="Title"
+            color={isDarkText}
+            value={productData.title}
+            onChangeText={(text) =>
+              setProductData({ ...productData, title: text })
+            }
+            InputLeftElement={
+              <Icon
+                as={<MaterialIcons name="pedal-bike" />}
+                size={5}
+                ml="2"
+                color="muted.400"
+              />
+            }
+            fontFamily={"body"}
           />
-        )}
-      </VStack>
-    </Animated.ScrollView>
+          <InputSectionCategory data={productData} setData={setProductData} />
+          <TextArea
+            autoCompleteType={"off"}
+            h={SCREEN_HEIGHT * 0.15}
+            placeholder="Description..."
+            w={{
+              base: "90%",
+              md: "70%",
+              lg: "50%",
+            }}
+            maxW="container"
+            value={productData.description}
+            onChangeText={(text) =>
+              setProductData({ ...productData, description: text })
+            }
+            color={isDarkText}
+          />
+          <InputPriceButton data={productData} setData={setProductData} />
+          <Button
+            w={{
+              base: "90%",
+              md: "70%",
+              lg: "50%",
+            }}
+            colorScheme="blue"
+            onPress={handleSubmit}
+            isDisabled={
+              productData.title === "" ||
+              productData.price === "" ||
+              productData.section === "" ||
+              (productData.section === "Bikes" &&
+                productData.category === "") ||
+              productData.image?.length === 0 ||
+              isLoading
+            }
+          >
+            <Text style={styles.buttonText}>Submit</Text>
+          </Button>
+          <Button
+            w={{
+              base: "90%",
+              md: "70%",
+              lg: "50%",
+            }}
+            colorScheme="blue"
+            onPress={() => pickImage(true)}
+            isDisabled={isLoading}
+          >
+            <Text style={styles.buttonText}>Take Photo</Text>
+          </Button>
+          <Button
+            w={{
+              base: "90%",
+              md: "70%",
+              lg: "50%",
+            }}
+            colorScheme="blue"
+            onPress={() => pickImage(false)}
+            isDisabled={isLoading}
+          >
+            <Text style={styles.buttonText}>Pick from Gallery</Text>
+          </Button>
+          {productData.image && productData.image.length > 0 && (
+            <Animated.FlatList
+              data={productData.image}
+              horizontal
+              renderItem={({ item, index }) => (
+                <View style={styles.imageWrapper}>
+                  <Image
+                    source={{ uri: item }}
+                    resizeMode="cover"
+                    style={styles.image}
+                    alt={`Selected image ${index + 1}`}
+                  />
+                  <Pressable
+                    style={styles.deleteButton}
+                    onPress={() => removeImage(index)}
+                  >
+                    <Ionicons
+                      name="trash-outline"
+                      size={SCREEN_WIDTH * 0.05}
+                      color="red"
+                    />
+                  </Pressable>
+                </View>
+              )}
+              keyExtractor={(item, index) => `${item}-${index}`}
+            />
+          )}
+        </VStack>
+      </Animated.ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: Platform.OS === "android" ? SCREEN_HEIGHT * 0.15 : 0,
+    paddingBottom: Platform.OS === "android" ? SCREEN_HEIGHT * 0.1 : 0,
     marginTop: StatusBar.currentHeight,
   },
   imageWrapper: {
@@ -284,5 +354,9 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: SCREEN_WIDTH * 0.04,
+  },
+  toastText: {
+    fontSize: 14,
+    fontFamily: "Poppins_500Medium",
   },
 });

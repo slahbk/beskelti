@@ -5,7 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
-import { NativeBaseProvider, Box } from "native-base";
+import { NativeBaseProvider } from "native-base";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -24,15 +24,12 @@ export default function TabLayout() {
               fontFamily: "Poppins_500Medium",
             },
             tabBarStyle: {
-              position: "absolute",
-              marginBottom: 10,
-              borderRadius: 15,
-              marginHorizontal: 10,
               shadowColor: Colors[colorScheme ?? "light"].text,
             },
             headerTitleStyle: {
               fontFamily: "Poppins_500Medium",
-            }
+            },
+            tabBarShowLabel: false
           }}
         >
           <Tabs.Screen
@@ -47,6 +44,7 @@ export default function TabLayout() {
                       : require("@/assets/animation-icons/home.json")
                   }
                   focused={focused}
+                  label="Home"
                 />
               ),
             }}
@@ -63,6 +61,7 @@ export default function TabLayout() {
                       : require("@/assets/animation-icons/bicycle.json")
                   }
                   focused={focused}
+                  label="Bikes"
                 />
               ),
             }}
@@ -79,6 +78,7 @@ export default function TabLayout() {
                       : require("@/assets/animation-icons/add.json")
                   }
                   focused={focused}
+                  label="Add new"
                 />
               ),
             }}
@@ -95,6 +95,7 @@ export default function TabLayout() {
                       : require("@/assets/animation-icons/accessoires.json")
                   }
                   focused={focused}
+                  label="Accessories"
                 />
               ),
             }}
@@ -111,6 +112,7 @@ export default function TabLayout() {
                       : require("@/assets/animation-icons/tool.json")
                   }
                   focused={focused}
+                  label="Tools"
                 />
               ),
             }}
