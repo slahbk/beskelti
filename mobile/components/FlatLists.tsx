@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import {
   Dimensions,
   Image,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,8 +23,17 @@ export default function FlatLists({ data }: { data: any }) {
   const colorScheme = useColorScheme();
   const isDarkText = Colors[colorScheme ?? "light"].text;
   const isDarkBackground = Colors[colorScheme ?? "light"].background;
-  const itemRef = React.useRef(null);
   const loading = useSelector((state: any) => state.products.loading);
+
+  const array = ["Tools", "Accessories", "Bikes"].map((_, index) => {
+    return {
+      id: index ,
+      title: data.title,
+      image: [
+        "@/assets/images/placeholder.png",
+      ]
+    }
+  });
 
   const renderItem = useCallback(
     ({ item, index }: { item: any; index: number }) => {
@@ -58,6 +66,8 @@ export default function FlatLists({ data }: { data: any }) {
               source={{ uri: item.image[0] }}
               style={[styles.image, { height: itemHeight * 0.6 }]}
               resizeMode="contain"
+              defaultSource={require("@/assets/images/placeholder.png")}
+              // loadingIndicatorSource={{uri: "@/assets/images/placeholder.png"}}
             />
           </Skeleton>
           <Skeleton.Text isLoaded={!loading} lines={1} w="90%" mt={2}>
@@ -90,7 +100,7 @@ export default function FlatLists({ data }: { data: any }) {
         </TouchableOpacity>
       </View>
       <Animated.FlatList
-        data={data.data}
+        data={data.data || array}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}

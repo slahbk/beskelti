@@ -8,7 +8,6 @@ import {
   Platform,
   Pressable,
   Dimensions,
-  ActivityIndicator,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
@@ -20,27 +19,14 @@ import * as ImagePicker from "expo-image-picker";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
 import axios from "axios";
-import {
-  CLOUDINARY_API_SECRET,
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_CLOUD_NAME,
-  IP_ADDRESS,
-} from "@/constants/ApiConfig";
+
 import ToastManager, { Toast } from "toastify-react-native";
-import { Cloudinary } from "@cloudinary/url-gen";
 import { upload } from "cloudinary-react-native";
 import Loading from "@/components/Loading";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
+import { myCld, options } from "../../cloudinary/cldConfig";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-const myCld = new Cloudinary({
-  cloud: {
-    cloudName: CLOUDINARY_CLOUD_NAME,
-    apiKey: CLOUDINARY_API_KEY,
-    apiSecret: CLOUDINARY_API_SECRET,
-  },
-});
 
 export default function Post() {
   const colorScheme = useColorScheme();
@@ -60,6 +46,7 @@ export default function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [fixedProgress, setFixedProgress] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
+  const [exit, setExit] = useState(false);
 
   // useEffect(() => {
   //   const userId = SecureStore.getItem("userId");
@@ -78,18 +65,13 @@ export default function Post() {
       productData.image?.forEach(async (image) => {
         await upload(myCld, {
           file: image,
-          options: {
-            overwrite: true,
-            invalidate: false,
-            folder: "beskelti app",
-          },
+          options: options,
           callback: async (err, result) => {
             if (err) {
               Toast.error("Error uploading image");
               setUploadedImages([]);
-              productData.image = [];
               setIsLoading(false);
-              resetProgress();
+              setProgress(0);
               return;
             } else if (result) {
               uploadedImages.push(result.secure_url);
@@ -108,8 +90,7 @@ export default function Post() {
       });
     } catch (error) {
       setIsLoading(false);
-      resetProgress();
-      productData.image = [];
+      setProgress(0);
       Toast.error("Failed to add product");
       setUploadedImages([]);
     }
@@ -121,14 +102,25 @@ export default function Post() {
 
   const handleUpload = async () => {
     setTimeout(async () => {
-      productData.image = uploadedImages;
-      await axios.post(`${IP_ADDRESS}/product/add`, productData);
-      setIsLoading(false);
       Toast.success("Product Added Successfully");
-      resetForm();
-      resetProgress();
       dispatch(fetchProducts() as any);
     }, 1000);
+    productData.image = uploadedImages;
+    await axios.post(
+      `${process.env.EXPO_PUBLIC_IP_ADDRESS}/product/add`,
+      productData
+    );
+    setIsLoading(false);
+    resetForm();
+    resetProgress();
+  };
+
+  const handleExit = () => {
+    setExit(true);
+    setProgress(0);
+    setUploadedImages([]);
+    Toast.error("Product Not Added");
+    return;
   };
 
   const resetForm = () => {
@@ -166,19 +158,19 @@ export default function Post() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
           })
         : await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             aspect: [4, 3],
-            quality: 1,
+            quality: 0.4,
             allowsMultipleSelection: true,
             selectionLimit: 5,
           });
 
       if (!result.canceled && result.assets) {
         const newImageUris = result.assets.map((asset) => asset.uri);
-        setFixedProgress(prevProgress => prevProgress + newImageUris.length);
+        setFixedProgress((prevProgress) => prevProgress + newImageUris.length);
         setProductData((prevData) => ({
           ...prevData,
           image: prevData.image
@@ -198,11 +190,18 @@ export default function Post() {
         ? prevData.image.filter((_, i) => i !== index)
         : null,
     }));
+    setFixedProgress((prevProgress) => prevProgress - 1);
   };
 
   return (
     <>
-      {isLoading && <Loading progress={(progress / fixedProgress) * 10} />}
+      {isLoading && (
+        <Loading
+          progress={(progress / fixedProgress) * 10}
+          setIsLoading={setIsLoading}
+          handleExit={handleExit}
+        />
+      )}
       <Animated.ScrollView
         contentContainerStyle={styles.container}
         style={{ backgroundColor: isDark }}

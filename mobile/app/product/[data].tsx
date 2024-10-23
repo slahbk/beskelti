@@ -15,7 +15,6 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import axios from "axios";
-import { IP_ADDRESS } from "@/constants/ApiConfig";
 import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
@@ -31,7 +30,7 @@ export default function ProductDetails() {
   const [visible, setVisible] = useState(false);
   const fetchUser = useCallback(async () => {
     try {
-      const response = await axios.get(`${IP_ADDRESS}/user/${item.userId}`);
+      const response = await axios.get(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/user/${item.userId}`);
       setUser(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);

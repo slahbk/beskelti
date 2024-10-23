@@ -13,16 +13,12 @@ import { Skeleton } from "native-base";
 import Animated, {
   FadeIn,
   LinearTransition,
-  runOnJS,
-  useAnimatedScrollHandler,
-  useSharedValue,
 } from "react-native-reanimated";
 import { Link, useNavigation } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import ButtonBikeSwitch from "@/components/ButtonBikeSwitch";
 import { fetchProducts } from "@/redux/reducers/productSlice";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const { width, height } = Dimensions.get("window");
 
@@ -35,29 +31,7 @@ export default function Bikes() {
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
   const [numColumns, setNumColumns] = useState(2);
-  const scrollOffset = useSharedValue(0);
   const navigation = useNavigation();
-  const TabBarHeight = useBottomTabBarHeight();
-
-  const updateScrollOffset = () => {
-    let newMarginTop = 0;
-    if (scrollOffset.value >= 0 && scrollOffset.value <= TabBarHeight) {
-      newMarginTop = -scrollOffset.value;
-    } else if (scrollOffset.value >= TabBarHeight) {
-      newMarginTop = -TabBarHeight;
-    }
-    console.log("newMarginTop", newMarginTop);
-    navigation.setOptions({
-      tabBarStyle: {
-        marginBottom: newMarginTop,
-      },
-    });
-  };
-
-  const scrollHandler = ((event: any) => {
-    scrollOffset.value = event.nativeEvent.contentOffset.y;
-    runOnJS(updateScrollOffset)();
-  });
 
   useEffect(() => {
     const updateLayout = () => {
@@ -144,7 +118,6 @@ export default function Bikes() {
       <ButtonBikeSwitch
         selectedId={selectedId}
         setSelectedId={setSelectedId}
-        scrollOffset={scrollOffset}
       />
       <Animated.FlatList
         itemLayoutAnimation={LinearTransition}
@@ -167,8 +140,6 @@ export default function Bikes() {
             No {selectedId === "all" ? "" : selectedId} bikes
           </Text>
         )}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
       />
     </Animated.View>
   );
