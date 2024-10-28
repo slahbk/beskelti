@@ -1,5 +1,4 @@
-import { IP_ADDRESS } from "@/constants/ApiConfig";
-import { useFetchProduct } from "@/hooks/useFetchProduct";
+import { useFetchProduct } from "@/services/useFetchProduct";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk(

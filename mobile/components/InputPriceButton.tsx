@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import React from "react";
 import InputSpinner from "react-native-input-spinner";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 
 export default function InputPriceButton({ data, setData }: any) {
-  const isDark = Colors[useColorScheme() ?? "light"].background;
-  const isDarkText = Colors[useColorScheme() ?? "light"].tabIconDefault;
+  const isDark = Colors[useColorScheme() ?? "light"];
 
   return (
     <InputSpinner

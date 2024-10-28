@@ -24,8 +24,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function Bikes() {
   const colorScheme = useColorScheme();
-  const isDark = Colors[colorScheme ?? "light"].background;
-  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const isDark = Colors[colorScheme ?? "light"];
   const [selectedId, setSelectedId] = useState<string>("all");
   const itemRef = useRef(null);
   const products = useSelector((state: any) => state.products);
@@ -59,7 +58,7 @@ export default function Bikes() {
   const renderItem = ({ item }: { item: any }) => (
     <Animated.View
       entering={FadeIn}
-      style={[styles.item, { width: width / numColumns - 15, borderColor: isDarkText }]}
+      style={[styles.item, { width: width / numColumns - 15, borderColor: isDark.text }]}
     >
       <Skeleton
         ref={itemRef}
@@ -83,17 +82,17 @@ export default function Bikes() {
         alignItems="center"
       >
         <Text
-          style={[styles.title, { color: isDarkText }]}
+          style={[styles.title, { color: isDark.text }]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
           {item.title}
         </Text>
-        <Text style={[styles.text, { color: isDarkText }]}>
+        <Text style={[styles.text, { color: isDark.text }]}>
           {item.price} TND
         </Text>
         {selectedId === "all" && (
-          <Text style={[styles.text, { color: isDarkText }]}>
+          <Text style={[styles.text, { color: isDark.text }]}>
             category: {item.category}
           </Text>
         )}
@@ -113,7 +112,7 @@ export default function Bikes() {
 
   return (
     <Animated.View
-      style={[styles.container, { backgroundColor: isDark }]}
+      style={[styles.container, { backgroundColor: isDark.background }]}
     >
       <ButtonBikeSwitch
         selectedId={selectedId}
@@ -136,7 +135,7 @@ export default function Bikes() {
           />
         }
         ListEmptyComponent={() => (
-          <Text style={[styles.emptyText, { color: isDarkText }]}>
+          <Text style={[styles.emptyText, { color: isDark.text }]}>
             No {selectedId === "all" ? "" : selectedId} bikes
           </Text>
         )}

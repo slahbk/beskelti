@@ -1,5 +1,5 @@
 import React from "react";
-import FlatLists from "./FlatLists";
+import ListProducts from "./ListProducts";
 import { useSelector } from "react-redux";
 
 export default function ListTools() {
@@ -7,7 +7,7 @@ export default function ListTools() {
   const data = products?.data?.filter((item: any) => item.section === "Tools");
   return (
     <>
-      <FlatLists
+      <ListProducts
         data={{
           title: "Tools",
           data: data,

@@ -19,10 +19,9 @@ import Animated, {
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-export default function FlatLists({ data }: { data: any }) {
+export default function ListProducts({ data }: { data: any }) {
   const colorScheme = useColorScheme();
-  const isDarkText = Colors[colorScheme ?? "light"].text;
-  const isDarkBackground = Colors[colorScheme ?? "light"].background;
+  const isDark = Colors[colorScheme ?? "light"];
   const loading = useSelector((state: any) => state.products.loading);
 
   const array = ["Tools", "Accessories", "Bikes"].map((_, index) => {
@@ -48,8 +47,9 @@ export default function FlatLists({ data }: { data: any }) {
             {
               width: itemWidth,
               height: itemHeight,
-              backgroundColor: isDarkBackground,
-              borderColor: isDarkText,
+              backgroundColor: isDark.background,
+              borderColor: isDark.text,
+              shadowColor: isDark.shadow
             },
           ]}
         >
@@ -72,7 +72,7 @@ export default function FlatLists({ data }: { data: any }) {
           </Skeleton>
           <Skeleton.Text isLoaded={!loading} lines={1} w="90%" mt={2}>
             <Text
-              style={[styles.itemTitle, { color: isDarkText }]}
+              style={[styles.itemTitle, { color: isDark.text }]}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -82,18 +82,18 @@ export default function FlatLists({ data }: { data: any }) {
         </Animated.View>
       );
     },
-    [loading, isDarkBackground]
+    [loading]
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.titleBox}>
-        <Text style={[styles.sectionTitle, { color: isDarkText }]}>
+        <Text style={[styles.sectionTitle, { color: isDark.text }]}>
           {data.title}
         </Text>
         <TouchableOpacity>
           <Link href={data.title}>
-            <Text style={[styles.seeAllText, { color: isDarkText }]}>
+            <Text style={[styles.seeAllText, { color: isDark.text }]}>
               See all
             </Text>
           </Link>
@@ -105,8 +105,8 @@ export default function FlatLists({ data }: { data: any }) {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.flatListContent}
-        itemLayoutAnimation={LinearTransition}
         keyExtractor={(item) => item.id.toString()}
+        itemLayoutAnimation={LinearTransition}
       />
     </View>
   );
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 6,
   },
   sectionTitle: {
     fontFamily: "Poppins_600SemiBold",
@@ -132,15 +132,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   flatListContent: {
-    // paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   item: {
-    borderWidth: 1,
     borderRadius: 10,
     marginHorizontal: 5,
     padding: 6,
     justifyContent: "space-around",
-    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

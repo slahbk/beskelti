@@ -30,8 +30,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
   const colorScheme = useColorScheme();
-  const isDark = Colors[colorScheme ?? "light"].background;
-  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const isDark = Colors[colorScheme ?? "light"];
   const dispatch = useDispatch();
   const [productData, setProductData] = useState<ProductType>({
     title: "test",
@@ -46,7 +45,6 @@ export default function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [fixedProgress, setFixedProgress] = useState<number>(0);
   const [progress, setProgress] = useState<number>(0);
-  const [exit, setExit] = useState(false);
 
   // useEffect(() => {
   //   const userId = SecureStore.getItem("userId");
@@ -116,7 +114,6 @@ export default function Post() {
   };
 
   const handleExit = () => {
-    setExit(true);
     setProgress(0);
     setUploadedImages([]);
     Toast.error("Product Not Added");
@@ -204,7 +201,7 @@ export default function Post() {
       )}
       <Animated.ScrollView
         contentContainerStyle={styles.container}
-        style={{ backgroundColor: isDark }}
+        style={{ backgroundColor: isDark.background }}
         showsVerticalScrollIndicator={true}
       >
         <ToastManager textStyle={styles.toastText} position="top" />
@@ -216,7 +213,7 @@ export default function Post() {
               lg: "50%",
             }}
             placeholder="Title"
-            color={isDarkText}
+            color={isDark.text}
             value={productData.title}
             onChangeText={(text) =>
               setProductData({ ...productData, title: text })
@@ -246,7 +243,7 @@ export default function Post() {
             onChangeText={(text) =>
               setProductData({ ...productData, description: text })
             }
-            color={isDarkText}
+            color={isDark.text}
           />
           <InputPriceButton data={productData} setData={setProductData} />
           <Button

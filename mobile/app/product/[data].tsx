@@ -18,23 +18,20 @@ import axios from "axios";
 import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
+import { fetchUserDetails } from "@/services/fetchUserDetails";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function ProductDetails() {
   const { data } = useLocalSearchParams();
   const item = JSON.parse(data as string);
   const colorScheme = useColorScheme();
-  const isDarkText = Colors[colorScheme ?? "light"].text;
-  const isDarkBackground = Colors[colorScheme ?? "light"].background;
+  const isDark = Colors[colorScheme ?? "light"];
   const [user, setUser] = useState<UserType | null>(null);
   const [visible, setVisible] = useState(false);
+
   const fetchUser = useCallback(async () => {
-    try {
-      const response = await axios.get(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/user/${item.userId}`);
-      setUser(response.data);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+    const response = fetchUserDetails({ userId: item.userId });
+    setUser(await response);
   }, [item.userId]);
 
   useEffect(() => {
@@ -56,27 +53,27 @@ export default function ProductDetails() {
 
   const renderProductDetails = () => (
     <View
-      style={[styles.detailsContainer, { backgroundColor: isDarkBackground }]}
+      style={[styles.detailsContainer, { backgroundColor: isDark.background }]}
     >
-      <Text style={[styles.title, { color: isDarkText }]}>{item.title}</Text>
-      <Text style={[styles.price, { color: isDarkText }]}>
+      <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
+      <Text style={[styles.price, { color: isDark.text }]}>
         {item.price} TND
       </Text>
-      <Text style={[styles.sectionTitle, { color: isDarkText }]}>
+      <Text style={[styles.sectionTitle, { color: isDark.text }]}>
         Section: {item.section}
       </Text>
       {item.category && (
-        <Text style={[styles.category, { color: isDarkText }]}>
+        <Text style={[styles.category, { color: isDark.text }]}>
           Category: {item.category}
         </Text>
       )}
-      <Text style={[styles.buyer, { color: isDarkText }]}>
+      <Text style={[styles.buyer, { color: isDark.text }]}>
         Company: {user?.company}
       </Text>
-      <Text style={[styles.buyer, { color: isDarkText }]}>
+      <Text style={[styles.buyer, { color: isDark.text }]}>
         Buyer: {user?.fullName} ({user?.products.length} products)
       </Text>
-      <Text style={[styles.description, { color: isDarkText }]}>
+      <Text style={[styles.description, { color: isDark.text }]}>
         Description: {item.description}
       </Text>
       <View style={styles.buyerContainer}>
@@ -111,7 +108,7 @@ export default function ProductDetails() {
     <Animated.ScrollView
       contentContainerStyle={[
         styles.container,
-        { backgroundColor: isDarkBackground },
+        { backgroundColor: isDark.background },
       ]}
     >
       {visible && (

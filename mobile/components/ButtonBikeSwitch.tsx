@@ -21,8 +21,7 @@ const { width } = Dimensions.get('window');
 
 export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
   const colorScheme = useColorScheme();
-  const isDark = Colors[colorScheme ?? "light"].background;
-  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const isDark = Colors[colorScheme ?? "light"];
   const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
   const buttonWidth = width * 0.3; // 30% of screen width
@@ -35,15 +34,15 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
         {
           width: buttonWidth,
           height: buttonHeight,
-          borderColor: selectedId === id ? "#17809e" : isDarkText,
-          backgroundColor: selectedId === id ? "#69c4f9" : isDark,
+          borderColor: selectedId === id ? "#17809e" : isDark.text,
+          backgroundColor: selectedId === id ? "#69c4f9" : isDark.background,
         },
       ]}
       onPress={() => setSelectedId(id)}
       activeOpacity={0.8}
     >
       {icon}
-      <Text style={[styles.buttonText, { color: isDarkText }]}>{label}</Text>
+      <Text style={[styles.buttonText, { color: isDark.text }]}>{label}</Text>
     </TouchableOpacity>
   );
 

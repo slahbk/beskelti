@@ -20,8 +20,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function Accessories() {
   const colorScheme = useColorScheme();
-  const isDark = Colors[colorScheme ?? "light"].background;
-  const isDarkText = Colors[colorScheme ?? "light"].text;
+  const isDark = Colors[colorScheme ?? "light"];
   const itemRef = useRef(null);
   const products = useSelector((state: any) => state.products);
   const dispatch = useDispatch();
@@ -51,7 +50,7 @@ export default function Accessories() {
   const renderItem = ({ item }: { item: any }) => (
     <Animated.View
       entering={FadeIn}
-      style={[styles.item, { width: width / numColumns - 15, borderColor: isDarkText }]}
+      style={[styles.item, { width: width / numColumns - 15, borderColor: isDark.text }]}
     >
       <Skeleton
         ref={itemRef}
@@ -75,13 +74,13 @@ export default function Accessories() {
         alignItems="center"
       >
         <Text
-          style={[styles.title, { color: isDarkText }]}
+          style={[styles.title, { color: isDark.text }]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
           {item.title}
         </Text>
-        <Text style={[styles.text, { color: isDarkText }]}>
+        <Text style={[styles.text, { color: isDark.text }]}>
           {item.price} TND
         </Text>
       </Skeleton.Text>
@@ -103,7 +102,7 @@ export default function Accessories() {
   return (
     <Animated.View
       entering={FadeIn}
-      style={[styles.container, { backgroundColor: isDark }]}
+      style={[styles.container, { backgroundColor: isDark.background }]}
     >
       <Animated.FlatList
         itemLayoutAnimation={LinearTransition}
@@ -122,7 +121,7 @@ export default function Accessories() {
           />
         }
         ListEmptyComponent={() => (
-          <Text style={[styles.emptyText, { color: isDarkText }]}>
+          <Text style={[styles.emptyText, { color: isDark.text }]}>
             No Accessories
           </Text>
         )}

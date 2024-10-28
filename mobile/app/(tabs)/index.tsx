@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   Platform,
-  ScrollView,
   StatusBar,
   RefreshControl,
   Dimensions,
@@ -19,7 +18,7 @@ import Animated from "react-native-reanimated";
 const { width, height } = Dimensions.get('window');
 
 export default function HomeScreen() {
-  const isDark = Colors[useColorScheme() ?? "light"].background;
+  const isDark = Colors[useColorScheme() ?? "light"];
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state: any) => state.products);
 
@@ -40,7 +39,7 @@ export default function HomeScreen() {
     <Animated.ScrollView
       showsVerticalScrollIndicator={false}
       style={{
-        backgroundColor: isDark,
+        backgroundColor: isDark.background,
       }}
       contentContainerStyle={styles.container}
       refreshControl={

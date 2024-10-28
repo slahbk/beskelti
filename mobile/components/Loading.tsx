@@ -17,7 +17,7 @@ export default function Loading({
 
   setTimeout(() => {
     setIsExit(true);
-  }, 10000);
+  }, 30000);
 
   useEffect(() => {
     () => {

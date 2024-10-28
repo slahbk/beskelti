@@ -9,13 +9,14 @@ import { NativeBaseProvider } from "native-base";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const isDark = Colors[colorScheme ?? "light"];
 
   return (
     <NativeBaseProvider>
       <Provider store={store}>
         <Tabs
           screenOptions={{
-            tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+            tabBarActiveTintColor: isDark.tint,
             headerShown: true,
             headerTitleAlign: "center",
             headerStatusBarHeight: 40,
@@ -24,7 +25,7 @@ export default function TabLayout() {
               fontFamily: "Poppins_500Medium",
             },
             tabBarStyle: {
-              shadowColor: Colors[colorScheme ?? "light"].text,
+              shadowColor: isDark.text,
             },
             headerTitleStyle: {
               fontFamily: "Poppins_500Medium",
