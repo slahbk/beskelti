@@ -45,7 +45,7 @@ export default function Loading({
         </View>
       )}
       <LottieView
-        source={require("../assets/animation-icons/loading.json")}
+        source={require("../../assets/animation-icons/loading.json")}
         style={styles.animation}
         autoPlay
       />

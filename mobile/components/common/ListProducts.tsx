@@ -11,7 +11,7 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Link } from "expo-router";
 import { useSelector } from "react-redux";
-import { Skeleton } from "native-base";
+import Skeleton from "react-native-reanimated-skeleton";
 import Animated, {
   FadeInRight,
   LinearTransition,
@@ -26,12 +26,10 @@ export default function ListProducts({ data }: { data: any }) {
 
   const array = ["Tools", "Accessories", "Bikes"].map((_, index) => {
     return {
-      id: index ,
+      id: index,
       title: data.title,
-      image: [
-        "@/assets/images/placeholder.png",
-      ]
-    }
+      image: ["@/assets/images/placeholder.png"],
+    };
   });
 
   const renderItem = useCallback(
@@ -47,9 +45,9 @@ export default function ListProducts({ data }: { data: any }) {
             {
               width: itemWidth,
               height: itemHeight,
-              backgroundColor: isDark.background,
               borderColor: isDark.text,
-              shadowColor: isDark.shadow
+              shadowColor: isDark.shadow,
+              backgroundColor: isDark.backgroundSecondary,
             },
           ]}
         >
@@ -60,25 +58,45 @@ export default function ListProducts({ data }: { data: any }) {
               params: { data: JSON.stringify(item) },
             }}
           ></Link>
-
-          <Skeleton isLoaded={!loading} h="70%" w="100%" borderRadius={10}>
+          <Skeleton
+            animationDirection="horizontalLeft"
+            isLoading={loading}
+            layout={[
+              {
+                borderRadius: 10,
+                height: itemHeight * 0.7,
+                marginBottom: 16,
+                width: itemWidth * 0.9,
+              },
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                children: [
+                  {
+                    borderRadius: 10,
+                    height: 20,
+                    width: itemWidth * 0.9,
+                  },
+                ],
+              },
+            ]}
+          >
             <Image
               source={{ uri: item.image[0] }}
-              style={[styles.image, { height: itemHeight * 0.6 }]}
+              style={[
+                styles.image,
+                { height: itemHeight * 0.8, width: itemWidth * 0.95 },
+              ]}
               resizeMode="contain"
               defaultSource={require("@/assets/images/placeholder.png")}
-              // loadingIndicatorSource={{uri: "@/assets/images/placeholder.png"}}
             />
-          </Skeleton>
-          <Skeleton.Text isLoaded={!loading} lines={1} w="90%" mt={2}>
             <Text
               style={[styles.itemTitle, { color: isDark.text }]}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+              numberOfLines={2}
             >
               {item.title}
             </Text>
-          </Skeleton.Text>
+          </Skeleton>
         </Animated.View>
       );
     },
@@ -140,15 +158,14 @@ const styles = StyleSheet.create({
     padding: 6,
     justifyContent: "space-around",
     shadowOffset: {
-      width: 0,
-      height: 2,
+      width: 10,
+      height: 10,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 10,
+    shadowRadius: 10,
+    elevation: 4,
   },
   image: {
-    width: "100%",
     borderRadius: 10,
   },
   itemTitle: {

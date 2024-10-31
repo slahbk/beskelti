@@ -7,15 +7,15 @@ import {
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import ListBikes from "@/components/ListBikes";
-import ListAccessories from "@/components/ListAccessories";
-import ListTools from "@/components/ListTools";
+import ListBikes from "@/components/common/ListBikes";
+import ListAccessories from "@/components/common/ListAccessories";
+import ListTools from "@/components/common/ListTools";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import Animated from "react-native-reanimated";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 export default function HomeScreen() {
   const isDark = Colors[useColorScheme() ?? "light"];
@@ -43,10 +43,7 @@ export default function HomeScreen() {
       }}
       contentContainerStyle={styles.container}
       refreshControl={
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={handleRefresh}
-        />
+        <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
       }
     >
       <ListBikes />

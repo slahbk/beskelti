@@ -7,7 +7,6 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { LogBox } from "react-native";
 import {
   useFonts,
   Poppins_100Thin,
@@ -50,12 +49,13 @@ export default function RootLayout() {
     Poppins_600SemiBold_Italic,
     Poppins_700Bold,
     Poppins_700Bold_Italic,
+    Poppins_800ExtraBold,
+    Poppins_800ExtraBold_Italic,
+    Poppins_900Black,
+    Poppins_900Black_Italic,
   });
 
   useEffect(() => {
-    LogBox.ignoreLogs([
-      "In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.",
-    ]);
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -70,7 +70,10 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-        <Stack.Screen name="product/[data]" options={{ headerTitle: "Detail" }} />
+        <Stack.Screen
+          name="product/[data]"
+          options={{ headerTitle: "Detail" }}
+        />
       </Stack>
     </ThemeProvider>
   );

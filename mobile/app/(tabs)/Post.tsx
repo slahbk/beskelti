@@ -8,13 +8,14 @@ import {
   Platform,
   Pressable,
   Dimensions,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
-import { Icon, Input, TextArea, VStack, Button } from "native-base";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import InputPriceButton from "@/components/InputPriceButton";
-import InputSectionCategory from "@/components/InputSectionCategory";
+import InputPriceButton from "@/components/UI/InputPriceButton";
+import InputSectionCategory from "@/components/UI/InputSectionCategory";
 import * as ImagePicker from "expo-image-picker";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
@@ -22,10 +23,11 @@ import axios from "axios";
 
 import ToastManager, { Toast } from "toastify-react-native";
 import { upload } from "cloudinary-react-native";
-import Loading from "@/components/Loading";
+import Loading from "@/components/UI/Loading";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
-import { myCld, options } from "../../cloudinary/cldConfig";
+import { myCld, options } from "@/cloudinary/cldConfig";
+import ButtonSubmit from "@/components/UI/ButtonSubmit";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
@@ -205,91 +207,99 @@ export default function Post() {
         showsVerticalScrollIndicator={true}
       >
         <ToastManager textStyle={styles.toastText} position="top" />
-        <VStack space={4} w="100%" alignItems="center">
-          <Input
-            w={{
-              base: "90%",
-              md: "70%",
-              lg: "50%",
+        <Animated.View style={styles.form}>
+        <InputPriceButton data={productData} setData={setProductData} />
+
+          <Animated.View
+            style={{
+              position: "relative",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            placeholder="Title"
-            color={isDark.text}
-            value={productData.title}
-            onChangeText={(text) =>
-              setProductData({ ...productData, title: text })
-            }
-            InputLeftElement={
-              <Icon
-                as={<MaterialIcons name="pedal-bike" />}
-                size={5}
-                ml="2"
-                color="muted.400"
-              />
-            }
-            fontFamily={"body"}
-          />
+          >
+            <TextInput
+              style={[
+                styles.input,
+                {
+                  borderColor: isDark.border,
+                  color: isDark.text,
+                  paddingHorizontal: SCREEN_WIDTH * 0.12,
+                },
+              ]}
+              value={productData.title}
+              placeholder="Title..."
+              placeholderTextColor={"gray"}
+              onChangeText={(text) =>
+                setProductData({ ...productData, title: text })
+              }
+            />
+            <MaterialIcons
+              name="pedal-bike"
+              style={{ position: "absolute", left: SCREEN_WIDTH * 0.08 }}
+              size={25}
+              color="gray"
+            />
+          </Animated.View>
           <InputSectionCategory data={productData} setData={setProductData} />
-          <TextArea
-            autoCompleteType={"off"}
-            h={SCREEN_HEIGHT * 0.15}
+          <TextInput
+            style={[
+              styles.input,
+              {
+                height: "auto",
+                textAlignVertical: "top",
+                padding: 10,
+                borderColor: isDark.border,
+                color: isDark.text,
+              },
+            ]}
             placeholder="Description..."
-            w={{
-              base: "90%",
-              md: "70%",
-              lg: "50%",
-            }}
-            maxW="container"
+            placeholderTextColor={"gray"}
             value={productData.description}
             onChangeText={(text) =>
               setProductData({ ...productData, description: text })
             }
-            color={isDark.text}
+            numberOfLines={5}
+            multiline
           />
-          <InputPriceButton data={productData} setData={setProductData} />
-          <Button
-            w={{
-              base: "90%",
-              md: "70%",
-              lg: "50%",
+          <Animated.View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              width: "90%",
             }}
-            colorScheme="blue"
-            onPress={handleSubmit}
-            isDisabled={
-              productData.title === "" ||
-              productData.price === "" ||
-              productData.section === "" ||
-              (productData.section === "Bikes" &&
-                productData.category === "") ||
-              productData.image?.length === 0 ||
-              isLoading
-            }
           >
-            <Text style={styles.buttonText}>Submit</Text>
-          </Button>
-          <Button
-            w={{
-              base: "90%",
-              md: "70%",
-              lg: "50%",
-            }}
-            colorScheme="blue"
-            onPress={() => pickImage(true)}
-            isDisabled={isLoading}
-          >
-            <Text style={styles.buttonText}>Take Photo</Text>
-          </Button>
-          <Button
-            w={{
-              base: "90%",
-              md: "70%",
-              lg: "50%",
-            }}
-            colorScheme="blue"
-            onPress={() => pickImage(false)}
-            isDisabled={isLoading}
-          >
-            <Text style={styles.buttonText}>Pick from Gallery</Text>
-          </Button>
+            <View style={{ flexDirection: "row", gap: 5 }}>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.8}
+                onPress={() => pickImage(true)}
+              >
+                <Ionicons
+                  name="camera-outline"
+                  size={SCREEN_WIDTH * 0.07}
+                  color={"white"}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.8}
+                onPress={() => pickImage(false)}
+              >
+                <Ionicons
+                  name="images-outline"
+                  size={SCREEN_WIDTH * 0.07}
+                  color={"white"}
+                />
+              </TouchableOpacity>
+            </View>
+            <ButtonSubmit 
+              productData={productData}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
+          </Animated.View>
           {productData.image && productData.image.length > 0 && (
             <Animated.FlatList
               data={productData.image}
@@ -301,6 +311,7 @@ export default function Post() {
                     resizeMode="cover"
                     style={styles.image}
                     alt={`Selected image ${index + 1}`}
+                    defaultSource={require("@/assets/images/placeholder.png")}
                   />
                   <Pressable
                     style={styles.deleteButton}
@@ -317,7 +328,7 @@ export default function Post() {
               keyExtractor={(item, index) => `${item}-${index}`}
             />
           )}
-        </VStack>
+        </Animated.View>
       </Animated.ScrollView>
     </>
   );
@@ -333,6 +344,28 @@ const styles = StyleSheet.create({
     height: SCREEN_WIDTH * 0.4,
     marginRight: SCREEN_WIDTH * 0.02,
     position: "relative",
+  },
+  form: {
+    gap: 25,
+    width: "100%",
+    alignItems: "center",
+  },
+  input: {
+    width: "90%",
+    height: SCREEN_HEIGHT * 0.06,
+    borderWidth: 1,
+    borderRadius: 5,
+    position: "relative",
+    paddingHorizontal: 10,
+  },
+  button: {
+    width: "auto",
+    padding: 10,
+    height: SCREEN_WIDTH * 0.12,
+    backgroundColor: "#1dacd6",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
   },
   image: {
     width: "100%",

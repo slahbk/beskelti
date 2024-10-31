@@ -5,14 +5,12 @@ import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
-import { NativeBaseProvider } from "native-base";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
 
   return (
-    <NativeBaseProvider>
       <Provider store={store}>
         <Tabs
           screenOptions={{
@@ -120,6 +118,5 @@ export default function TabLayout() {
           />
         </Tabs>
       </Provider>
-    </NativeBaseProvider>
   );
 }
