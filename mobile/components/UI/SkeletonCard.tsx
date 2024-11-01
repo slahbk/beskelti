@@ -53,13 +53,17 @@ export default function SkeletonCard({ section }: { section: string }) {
 
   const renderItem = ({ item }: { item: any }) => {
     const itemWidth = SCREEN_WIDTH / numColumns - 15;
-    const itemHeight = SCREEN_HEIGHT * 0.34;
+    const itemHeight = SCREEN_HEIGHT * 0.3;
     return (
       <Animated.View
         entering={FadeIn}
         style={[
           styles.item,
-          { width: itemWidth, height: itemHeight, borderColor: isDark.text },
+          {
+            width: itemWidth,
+            backgroundColor: isDark.background,
+            shadowColor: isDark.shadow,
+          },
         ]}
       >
         <Skeleton
@@ -99,17 +103,16 @@ export default function SkeletonCard({ section }: { section: string }) {
           <Image
             source={{ uri: item.image[0] }}
             style={[
-              styles.image,
               {
                 borderRadius: 10,
-                width: itemWidth * 0.9,
-                height: itemHeight * 0.5,
+                width: itemWidth * 0.95,
+                height: itemHeight * 0.55,
               },
             ]}
             resizeMode="contain"
             defaultSource={require("@/assets/images/placeholder.png")}
           />
-          <View style={{ alignItems: "center" }}>
+          <Animated.View style={{ alignItems: "center" }}>
             <Text
               style={[styles.title, { color: isDark.text }]}
               numberOfLines={1}
@@ -120,14 +123,14 @@ export default function SkeletonCard({ section }: { section: string }) {
             <Text style={[styles.text, { color: isDark.text }]}>
               {item.price} TND
             </Text>
-            {selectedId === "all" && (
+            {selectedId === "all" && item.category && (
               <Text style={[styles.text, { color: isDark.text }]}>
                 category: {item.category}
               </Text>
             )}
             <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles.button, { width: itemWidth * 0.9 }]}
+              activeOpacity={0.6}
+              style={[styles.button, { width: itemWidth * 0.95 }]}
             >
               <Link
                 href={{
@@ -138,7 +141,7 @@ export default function SkeletonCard({ section }: { section: string }) {
                 <Text style={styles.buttonText}>view details</Text>
               </Link>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         </Skeleton>
       </Animated.View>
     );
@@ -146,7 +149,10 @@ export default function SkeletonCard({ section }: { section: string }) {
 
   return (
     <Animated.View
-      style={[styles.container, { backgroundColor: isDark.background }]}
+      style={[
+        styles.container,
+        { backgroundColor: isDark.backgroundSecondary },
+      ]}
     >
       {section === "Bikes" && (
         <ButtonBikeSwitch
@@ -186,21 +192,21 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     padding: 10,
-    paddingBottom: StatusBar.currentHeight,
     alignItems: "center",
   },
   item: {
-    borderWidth: 0.5,
-    borderRadius: 8,
+    height: "auto",
+    borderRadius: 10,
     marginBottom: 15,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
     padding: 6,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  image: {
-    width: "100%",
-    height: "50%",
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 10,
+    shadowRadius: 10,
+    elevation: 4,
   },
   text: {
     fontSize: 14,
@@ -213,8 +219,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#0086d1",
-    padding: 8,
-    borderRadius: 10,
+    padding: 6,
+    borderRadius: 8,
     alignItems: "center",
   },
   buttonText: {

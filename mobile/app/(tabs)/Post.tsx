@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import { myCld, options } from "@/cloudinary/cldConfig";
 import ButtonSubmit from "@/components/UI/ButtonSubmit";
+import InputTitle from "@/components/UI/InputTitle";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
@@ -208,39 +209,12 @@ export default function Post() {
       >
         <ToastManager textStyle={styles.toastText} position="top" />
         <Animated.View style={styles.form}>
-        <InputPriceButton data={productData} setData={setProductData} />
-
-          <Animated.View
-            style={{
-              position: "relative",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  borderColor: isDark.border,
-                  color: isDark.text,
-                  paddingHorizontal: SCREEN_WIDTH * 0.12,
-                },
-              ]}
-              value={productData.title}
-              placeholder="Title..."
-              placeholderTextColor={"gray"}
-              onChangeText={(text) =>
-                setProductData({ ...productData, title: text })
-              }
-            />
-            <MaterialIcons
-              name="pedal-bike"
-              style={{ position: "absolute", left: SCREEN_WIDTH * 0.08 }}
-              size={25}
-              color="gray"
-            />
-          </Animated.View>
+          <InputPriceButton data={productData} setData={setProductData} />
+          <InputTitle
+            productData={productData}
+            setProductData={setProductData}
+            isDark={isDark}
+          />
           <InputSectionCategory data={productData} setData={setProductData} />
           <TextInput
             style={[
@@ -294,7 +268,7 @@ export default function Post() {
                 />
               </TouchableOpacity>
             </View>
-            <ButtonSubmit 
+            <ButtonSubmit
               productData={productData}
               handleSubmit={handleSubmit}
               isLoading={isLoading}

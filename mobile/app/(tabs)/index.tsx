@@ -39,7 +39,7 @@ export default function HomeScreen() {
     <Animated.ScrollView
       showsVerticalScrollIndicator={false}
       style={{
-        backgroundColor: isDark.background,
+        backgroundColor: isDark.backgroundSecondary,
       }}
       contentContainerStyle={styles.container}
       refreshControl={

@@ -28,7 +28,9 @@ export default function ListProducts({ data }: { data: any }) {
     return {
       id: index,
       title: data.title,
-      image: ["@/assets/images/placeholder.png"],
+      image: [
+        "https://www.wpexplorer.com/wp-content/uploads/theme-plugin-placeholder.png",
+      ],
     };
   });
 
@@ -39,15 +41,14 @@ export default function ListProducts({ data }: { data: any }) {
 
       return (
         <Animated.View
-          entering={FadeInRight.delay(index * 100)}
+          entering={FadeInRight}
           style={[
             styles.item,
             {
               width: itemWidth,
               height: itemHeight,
-              borderColor: isDark.text,
               shadowColor: isDark.shadow,
-              backgroundColor: isDark.backgroundSecondary,
+              backgroundColor: isDark.background,
             },
           ]}
         >
@@ -104,8 +105,8 @@ export default function ListProducts({ data }: { data: any }) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.titleBox}>
+    <Animated.View style={styles.container}>
+      <Animated.View style={styles.titleBox}>
         <Text style={[styles.sectionTitle, { color: isDark.text }]}>
           {data.title}
         </Text>
@@ -116,7 +117,7 @@ export default function ListProducts({ data }: { data: any }) {
             </Text>
           </Link>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
       <Animated.FlatList
         data={data.data || array}
         renderItem={renderItem}
@@ -126,7 +127,7 @@ export default function ListProducts({ data }: { data: any }) {
         keyExtractor={(item) => item.id.toString()}
         itemLayoutAnimation={LinearTransition}
       />
-    </View>
+    </Animated.View>
   );
 }
 

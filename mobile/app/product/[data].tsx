@@ -1,24 +1,21 @@
 import {
-  Alert,
   Dimensions,
   Image,
-  Linking,
   Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Animated from "react-native-reanimated";
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import axios from "axios";
 import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
 import { fetchUserDetails } from "@/services/fetchUserDetails";
+import ButtonContact from "@/components/UI/ButtonContact";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function ProductDetails() {
@@ -52,13 +49,23 @@ export default function ProductDetails() {
   );
 
   const renderProductDetails = () => (
-    <View
-      style={[styles.detailsContainer, { backgroundColor: isDark.background }]}
+    <Animated.View
+      style={[
+        styles.detailsContainer,
+        { backgroundColor: isDark.backgroundSecondary },
+      ]}
     >
+      <View
+        style={[
+          styles.priceContainer,
+          { backgroundColor: isDark.backgroundSecondary },
+        ]}
+      >
+        <Text style={[styles.price, { color: isDark.text }]}>
+          {item.price} TND
+        </Text>
+      </View>
       <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
-      <Text style={[styles.price, { color: isDark.text }]}>
-        {item.price} TND
-      </Text>
       <Text style={[styles.sectionTitle, { color: isDark.text }]}>
         Section: {item.section}
       </Text>
@@ -77,40 +84,14 @@ export default function ProductDetails() {
         Description: {item.description}
       </Text>
       <View style={styles.buyerContainer}>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          style={[styles.button, { backgroundColor: "#1ed760" }]}
-          onPress={() =>
-            Alert.alert(`call ${user?.fullName}`, `Phone: ${user?.phone}`, [
-              {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Call",
-                onPress: () => Linking.openURL(`tel:${user?.phone}`),
-              },
-            ])
-          }
-        >
-          <Text style={styles.buyer}>Call</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: "#26b1f3" }]}
-        >
-          <Text style={styles.buyer}>Chat</Text>
-        </TouchableOpacity>
+        <ButtonContact user={user} contact="phone" />
+        <ButtonContact user={user} contact="whatsapp" />
       </View>
-    </View>
+    </Animated.View>
   );
 
   return (
-    <Animated.ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: isDark.background },
-      ]}
-    >
+    <Animated.ScrollView contentContainerStyle={[styles.container]}>
       {visible && (
         <ImageView
           key={item.image.map((image: string, index: number) => index)}
@@ -136,20 +117,40 @@ export default function ProductDetails() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    backgroundColor: "white",
   },
   image: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.3,
+    height: SCREEN_HEIGHT * 0.30,
   },
   detailsContainer: {
+    position: "relative",
     flex: 1,
-    padding: 30,
-    borderTopStartRadius: 30,
-    borderTopEndRadius: 30,
-    marginTop: -100,
-    rowGap: 12,
-    borderWidth: 2,
-    borderColor: "gray",
+    padding: 25,
+    borderTopStartRadius: 20,
+    marginTop: -(SCREEN_HEIGHT * 0.15),
+    rowGap: 10,
+    borderTopWidth: 8,
+    borderEndWidth: 8,
+    borderStartWidth: 8,
+    borderColor: "white",
+  },
+  priceContainer: {
+    position: "absolute",
+    top: -60,
+    right: -8,
+    width: "60%",
+    height: 60,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopStartRadius: 20,
+    borderTopRightRadius: 20,
+    borderStartWidth: 8,
+    borderTopWidth: 8,
+    borderRightWidth: 8,
+    borderStyle: "solid",
+    borderColor: "white",
   },
   title: {
     fontSize: 26,
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   price: {
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: "Poppins_500Medium",
   },
   sectionTitle: {
@@ -175,12 +176,6 @@ const styles = StyleSheet.create({
   buyerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-  },
-  button: {
-    width: "45%",
-    padding: 10,
-    borderRadius: 10,
     alignItems: "center",
   },
   description: {

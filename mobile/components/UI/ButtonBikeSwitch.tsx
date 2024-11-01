@@ -9,15 +9,9 @@ import {
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import LottieView from "lottie-react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  interpolate,
-  Extrapolation,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
   const colorScheme = useColorScheme();
@@ -26,6 +20,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
 
   const buttonWidth = width * 0.3; // 30% of screen width
   const buttonHeight = width * 0.15; // 15% of screen width
+  const buutonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#17809e";
 
   const renderButton = (id: string, label: string, icon?: React.ReactNode) => (
     <TouchableOpacity
@@ -35,7 +30,8 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           width: buttonWidth,
           height: buttonHeight,
           borderColor: selectedId === id ? "#17809e" : isDark.text,
-          backgroundColor: selectedId === id ? "#69c4f9" : isDark.background,
+          backgroundColor:
+            selectedId === id ? buutonBackgroundColor : isDark.background,
         },
       ]}
       onPress={() => setSelectedId(id)}
@@ -80,18 +76,24 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     paddingHorizontal: width * 0.02,
     paddingVertical: width * 0.02,
   },
   button: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: 10,
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 10,
+    shadowRadius: 10,
+    elevation: 8,
   },
   buttonText: {
-    fontFamily: "Poppins_500Medium",
+    fontFamily: "Poppins_600SemiBold",
     fontSize: width * 0.03,
   },
   lottie: {

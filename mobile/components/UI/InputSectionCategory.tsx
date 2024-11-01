@@ -7,7 +7,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function InputSectionCategory({ data, setData }: any) {
   const isDark = Colors[useColorScheme() ?? "light"];
-  const selection = {
+  const select = {
     section: [
       { label: "Bikes", value: "Bikes" },
       { label: "Accessories", value: "Accessories" },
@@ -26,17 +26,33 @@ export default function InputSectionCategory({ data, setData }: any) {
     >
       <RNPickerSelect
         onValueChange={(value: any) => setData({ ...data, section: value })}
-        items={selection.section}
+        items={select.section}
         value={data.section}
         placeholder={{ label: "Choose Section", value: null }}
+        style={{
+          inputAndroid: {
+            color: isDark.text,
+          },
+          inputIOS: {
+            color: isDark.text,
+          }
+        }}
       />
       {data.section === "Bikes" && (
         <RNPickerSelect
           onValueChange={(value: any) => setData({ ...data, category: value })}
-          items={selection.categoryBikes}
+          items={select.categoryBikes}
           value={data.category}
           placeholder={{ label: "Choose Category", value: null }}
-        />
+          style={{
+            inputAndroid: {
+              color: isDark.text,
+            },
+            inputIOS: {
+              color: isDark.text,
+            }
+          }}
+          />
       )}
     </Animated.View>
   );
