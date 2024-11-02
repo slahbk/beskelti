@@ -1,4 +1,4 @@
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text } from "react-native";
 import React from "react";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   button: {
     width: "60%",
     height: SCREEN_HEIGHT * 0.06,
-    backgroundColor: "#1dacd6",
+    backgroundColor: "#22a6f1",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,

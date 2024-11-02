@@ -1,14 +1,14 @@
 import {
   Dimensions,
   Image,
+  ImageBackground,
   RefreshControl,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { Children, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Skeleton from "react-native-reanimated-skeleton";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -50,6 +50,14 @@ export default function SkeletonCard({ section }: { section: string }) {
     selectedId === "all" || section !== "Bikes"
       ? data
       : data?.filter((item: any) => item.category === selectedId);
+
+  const emptyArray = Array.from({ length: 6 }).map((_, index) => {
+    return {
+      id: index,
+      title: section,
+      image: [],
+    };
+  });
 
   const renderItem = ({ item }: { item: any }) => {
     const itemWidth = SCREEN_WIDTH / numColumns - 15;
@@ -100,18 +108,32 @@ export default function SkeletonCard({ section }: { section: string }) {
             },
           ]}
         >
-          <Image
-            source={{ uri: item.image[0] }}
+          <ImageBackground
+            source={{
+              uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
+            }}
             style={[
               {
                 borderRadius: 10,
-                width: itemWidth * 0.95,
+                width: itemWidth,
                 height: itemHeight * 0.55,
               },
             ]}
-            resizeMode="contain"
-            defaultSource={require("@/assets/images/placeholder.png")}
-          />
+            resizeMode="center"
+          >
+            <Image
+              source={{ uri: item.image[0] }}
+              style={[
+                {
+                  borderRadius: 10,
+                  width: itemWidth * 0.95,
+                  height: itemHeight * 0.55,
+                  alignSelf: "center",
+                },
+              ]}
+              resizeMode="contain"
+            />
+          </ImageBackground>
           <Animated.View style={{ alignItems: "center" }}>
             <Text
               style={[styles.title, { color: isDark.text }]}
@@ -120,27 +142,32 @@ export default function SkeletonCard({ section }: { section: string }) {
             >
               {item.title}
             </Text>
-            <Text style={[styles.text, { color: isDark.text }]}>
-              {item.price} TND
-            </Text>
-            {selectedId === "all" && item.category && (
-              <Text style={[styles.text, { color: isDark.text }]}>
-                category: {item.category}
-              </Text>
+            {filteredData && (
+              <View style={{ alignItems: "center" }}>
+                <Text style={[styles.text, { color: isDark.text }]}>
+                  {item.price} TND
+                </Text>
+                {selectedId === "all" && item.category && (
+                  <Text style={[styles.text, { color: isDark.text }]}>
+                    category: {item.category}
+                  </Text>
+                )}
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={[styles.button, { width: itemWidth * 0.95 }]}
+                  disabled={filteredData === undefined}
+                >
+                  <Link
+                    href={{
+                      pathname: "/product/[data]",
+                      params: { data: JSON.stringify(item) },
+                    }}
+                  >
+                    <Text style={styles.buttonText}>view details</Text>
+                  </Link>
+                </TouchableOpacity>
+              </View>
             )}
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={[styles.button, { width: itemWidth * 0.95 }]}
-            >
-              <Link
-                href={{
-                  pathname: "/product/[data]",
-                  params: { data: JSON.stringify(item) },
-                }}
-              >
-                <Text style={styles.buttonText}>view details</Text>
-              </Link>
-            </TouchableOpacity>
           </Animated.View>
         </Skeleton>
       </Animated.View>
@@ -164,7 +191,7 @@ export default function SkeletonCard({ section }: { section: string }) {
         itemLayoutAnimation={LinearTransition}
         initialNumToRender={4}
         maxToRenderPerBatch={10}
-        data={filteredData}
+        data={filteredData || emptyArray}
         ref={itemRef}
         renderItem={renderItem}
         numColumns={numColumns}
@@ -196,6 +223,7 @@ const styles = StyleSheet.create({
   },
   item: {
     height: "auto",
+    alignItems: "center",
     borderRadius: 10,
     marginBottom: 15,
     marginHorizontal: 4,

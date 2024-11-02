@@ -1,9 +1,10 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import RNPickerSelect from "react-native-picker-select";
 import Animated, { FadeInDown } from "react-native-reanimated";
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function InputSectionCategory({ data, setData }: any) {
   const isDark = Colors[useColorScheme() ?? "light"];
@@ -20,6 +21,18 @@ export default function InputSectionCategory({ data, setData }: any) {
   };
 
   return (
+    <View style={{ width: "100%" }}>
+      <Text
+        style={{
+          color: isDark.text,
+          alignSelf: "flex-start",
+          left: SCREEN_WIDTH * 0.08,
+          marginBottom: 5,
+          fontFamily: "Poppins_500Medium_Italic",
+        }}
+      >
+        Choose Section / Category:
+      </Text>
     <Animated.View
       entering={FadeInDown}
       style={[styles.container, { borderColor: isDark.border }]}
@@ -55,6 +68,7 @@ export default function InputSectionCategory({ data, setData }: any) {
           />
       )}
     </Animated.View>
+    </View>
   );
 }
 
@@ -64,5 +78,6 @@ const styles = StyleSheet.create({
     width: "90%",
     borderWidth: 1,
     borderRadius: 8,
+    alignSelf: "center",
   }
 });

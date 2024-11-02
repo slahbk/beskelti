@@ -15,44 +15,59 @@ export default function InputTitle({
   isDark: any;
 }) {
   return (
-    <Animated.View
-      style={{
-        position: "relative",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <TextInput
-        style={[
-          styles.input,
-          {
-            borderColor: isDark.border,
-            color: isDark.text,
-            paddingHorizontal: SCREEN_WIDTH * 0.12,
-          },
-        ]}
-        value={productData.title}
-        placeholder="Title..."
-        placeholderTextColor={"gray"}
-        onChangeText={(text) => setProductData({ ...productData, title: text })}
-      />
-      <MaterialIcons
-        name="pedal-bike"
-        style={{ position: "absolute", left: SCREEN_WIDTH * 0.08 }}
-        size={25}
-        color="gray"
-      />
-    </Animated.View>
+    <View style={{ width: "100%" }}>
+      <Text
+        style={{
+          color: isDark.text,
+          alignSelf: "flex-start",
+          left: SCREEN_WIDTH * 0.08,
+          marginBottom: 5,
+          fontFamily: "Poppins_500Medium_Italic",
+        }}
+      >
+        Title:
+      </Text>
+      <Animated.View
+        style={{
+          position: "relative",
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <TextInput
+          style={[
+            styles.input,
+            {
+              borderColor: isDark.border,
+              color: isDark.text,
+              paddingHorizontal: SCREEN_WIDTH * 0.12,
+            },
+          ]}
+          value={productData.title}
+          placeholder="Title..."
+          placeholderTextColor={"gray"}
+          onChangeText={(text) =>
+            setProductData({ ...productData, title: text })
+          }
+        />
+        <MaterialIcons
+          name="pedal-bike"
+          style={{ position: "absolute", left: SCREEN_WIDTH * 0.08 }}
+          size={25}
+          color="gray"
+        />
+      </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-    input: {
-        width: "90%",
-        height: SCREEN_HEIGHT * 0.06,
-        borderWidth: 1,
-        borderRadius: 5,
-        position: "relative",
-      },
+  input: {
+    width: "90%",
+    height: SCREEN_HEIGHT * 0.06,
+    borderWidth: 1,
+    borderRadius: 5,
+    position: "relative",
+  },
 });

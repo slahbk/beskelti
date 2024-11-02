@@ -1,9 +1,4 @@
-import {
-  Alert,
-  Linking,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Alert, Linking, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -12,7 +7,7 @@ export default function ButtonContact({ user, contact }: any) {
     <TouchableOpacity
       style={[
         styles.button,
-        { backgroundColor: contact === "phone" ? "#005e97" : "#2dcb49" },
+        { backgroundColor: contact === "phone" ? "#22a6f1" : "#2dcb49" },
       ]}
       activeOpacity={0.6}
       onPress={() =>
@@ -37,7 +32,7 @@ export default function ButtonContact({ user, contact }: any) {
     >
       <Ionicons
         name={contact === "phone" ? "call" : "logo-whatsapp"}
-        size={26}
+        size={30}
         color="white"
       />
     </TouchableOpacity>

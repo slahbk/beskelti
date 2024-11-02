@@ -2,10 +2,10 @@ import React, { useCallback } from "react";
 import {
   Dimensions,
   Image,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -24,13 +24,11 @@ export default function ListProducts({ data }: { data: any }) {
   const isDark = Colors[colorScheme ?? "light"];
   const loading = useSelector((state: any) => state.products.loading);
 
-  const array = ["Tools", "Accessories", "Bikes"].map((_, index) => {
+  const array = Array.from({ length: 3 }).map((_, index) => {
     return {
       id: index,
       title: data.title,
-      image: [
-        "https://www.wpexplorer.com/wp-content/uploads/theme-plugin-placeholder.png",
-      ],
+      image: [],
     };
   });
 
@@ -82,15 +80,25 @@ export default function ListProducts({ data }: { data: any }) {
               },
             ]}
           >
-            <Image
-              source={{ uri: item.image[0] }}
+            <ImageBackground
+              source={{
+                uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
+              }}
               style={[
                 styles.image,
                 { height: itemHeight * 0.8, width: itemWidth * 0.95 },
               ]}
-              resizeMode="contain"
-              defaultSource={require("@/assets/images/placeholder.png")}
-            />
+              resizeMode="center"
+            >
+              <Image
+                source={{ uri: item.image[0] }}
+                style={[
+                  styles.image,
+                  { height: itemHeight * 0.8, width: itemWidth * 0.95 },
+                ]}
+                resizeMode="contain"
+              />
+            </ImageBackground>
             <Text
               style={[styles.itemTitle, { color: isDark.text }]}
               numberOfLines={2}

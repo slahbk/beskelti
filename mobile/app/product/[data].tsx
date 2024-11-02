@@ -1,6 +1,7 @@
 import {
   Dimensions,
   Image,
+  ImageBackground,
   Pressable,
   StyleSheet,
   Text,
@@ -37,13 +38,21 @@ export default function ProductDetails() {
 
   const renderCarouselItem = useCallback(
     ({ item }: { item: string }) => (
-      <Pressable onPress={() => setVisible(true)}>
-        <Image
-          source={{ uri: item }}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </Pressable>
+      <ImageBackground
+        source={{
+          uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
+        }}
+        style={styles.image}
+        resizeMode="contain"
+      >
+        <Pressable onPress={() => setVisible(true)}>
+          <Image
+            source={{ uri: item }}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </Pressable>
+      </ImageBackground>
     ),
     []
   );
@@ -55,7 +64,7 @@ export default function ProductDetails() {
         { backgroundColor: isDark.backgroundSecondary },
       ]}
     >
-      <View
+      <Animated.View
         style={[
           styles.priceContainer,
           { backgroundColor: isDark.backgroundSecondary },
@@ -64,7 +73,7 @@ export default function ProductDetails() {
         <Text style={[styles.price, { color: isDark.text }]}>
           {item.price} TND
         </Text>
-      </View>
+      </Animated.View>
       <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
       <Text style={[styles.sectionTitle, { color: isDark.text }]}>
         Section: {item.section}
@@ -121,7 +130,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.30,
+    height: SCREEN_HEIGHT * 0.3,
   },
   detailsContainer: {
     position: "relative",

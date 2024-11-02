@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   StatusBar,
   StyleSheet,
-  Text,
   View,
   Image,
   Platform,
   Pressable,
   Dimensions,
-  TextInput,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
@@ -29,6 +28,7 @@ import { fetchProducts } from "@/redux/reducers/productSlice";
 import { myCld, options } from "@/cloudinary/cldConfig";
 import ButtonSubmit from "@/components/UI/ButtonSubmit";
 import InputTitle from "@/components/UI/InputTitle";
+import InputDescription from "@/components/UI/InputDescription";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
@@ -216,26 +216,11 @@ export default function Post() {
             isDark={isDark}
           />
           <InputSectionCategory data={productData} setData={setProductData} />
-          <TextInput
-            style={[
-              styles.input,
-              {
-                height: "auto",
-                textAlignVertical: "top",
-                padding: 10,
-                borderColor: isDark.border,
-                color: isDark.text,
-              },
-            ]}
-            placeholder="Description..."
-            placeholderTextColor={"gray"}
-            value={productData.description}
-            onChangeText={(text) =>
-              setProductData({ ...productData, description: text })
-            }
-            numberOfLines={5}
-            multiline
+          <InputDescription
+            productData={productData}
+            setProductData={setProductData}
           />
+
           <Animated.View
             style={{
               flexDirection: "row",
@@ -279,14 +264,21 @@ export default function Post() {
               data={productData.image}
               horizontal
               renderItem={({ item, index }) => (
-                <View style={styles.imageWrapper}>
-                  <Image
-                    source={{ uri: item }}
-                    resizeMode="cover"
+                <Animated.View style={styles.imageWrapper}>
+                  <ImageBackground
+                    source={{
+                      uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
+                    }}
                     style={styles.image}
-                    alt={`Selected image ${index + 1}`}
-                    defaultSource={require("@/assets/images/placeholder.png")}
-                  />
+                    resizeMode="contain"
+                  >
+                    <Image
+                      source={{ uri: item }}
+                      resizeMode="contain"
+                      style={styles.image}
+                      alt={`Selected image ${index + 1}`}
+                    />
+                  </ImageBackground>
                   <Pressable
                     style={styles.deleteButton}
                     onPress={() => removeImage(index)}
@@ -297,7 +289,7 @@ export default function Post() {
                       color="red"
                     />
                   </Pressable>
-                </View>
+                </Animated.View>
               )}
               keyExtractor={(item, index) => `${item}-${index}`}
             />
@@ -320,7 +312,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   form: {
-    gap: 25,
+    rowGap: 25,
     width: "100%",
     alignItems: "center",
   },
@@ -336,7 +328,7 @@ const styles = StyleSheet.create({
     width: "auto",
     padding: 10,
     height: SCREEN_WIDTH * 0.12,
-    backgroundColor: "#1dacd6",
+    backgroundColor: "#22a6f1",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
