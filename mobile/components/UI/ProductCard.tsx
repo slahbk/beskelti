@@ -19,7 +19,7 @@ import { fetchProducts } from "@/redux/reducers/productSlice";
 import ButtonBikeSwitch from "./ButtonBikeSwitch";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-export default function SkeletonCard({ section }: { section: string }) {
+export default function ProductCard({ section }: { section: string }) {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
   const itemRef = useRef(null);

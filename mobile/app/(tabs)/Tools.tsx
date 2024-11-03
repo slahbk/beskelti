@@ -1,10 +1,10 @@
 import React from "react";
-import SkeletonCard from "@/components/UI/SkeletonCard";
+import ProductCard from "@/components/UI/ProductCard";
 
 export default function Tools() {
   return (
     <>
-      <SkeletonCard section={"Tools"} />
+      <ProductCard section={"Tools"} />
     </>
   );
 }
