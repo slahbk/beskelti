@@ -69,7 +69,7 @@ export default function ProductCard({ section }: { section: string }) {
           styles.item,
           {
             width: itemWidth,
-            backgroundColor: isDark.background,
+            backgroundColor: isDark.backgroundSecondary,
             shadowColor: isDark.shadow,
           },
         ]}
@@ -178,7 +178,7 @@ export default function ProductCard({ section }: { section: string }) {
     <Animated.View
       style={[
         styles.container,
-        { backgroundColor: isDark.backgroundSecondary },
+        { backgroundColor: isDark.background },
       ]}
     >
       {section === "Bikes" && (

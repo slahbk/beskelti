@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function InputTitle({
@@ -42,6 +42,7 @@ export default function InputTitle({
               borderColor: isDark.border,
               color: isDark.text,
               paddingHorizontal: SCREEN_WIDTH * 0.12,
+              backgroundColor: isDark.backgroundSecondary,
             },
           ]}
           value={productData.title}
@@ -51,8 +52,14 @@ export default function InputTitle({
             setProductData({ ...productData, title: text })
           }
         />
-        <MaterialIcons
-          name="pedal-bike"
+        <Ionicons
+          name={
+            productData.section === "Bikes"
+              ? "bicycle-outline"
+              : productData.section === "Accessories"
+              ? "star-outline"
+              : "build-outline"
+          }
           style={{ position: "absolute", left: SCREEN_WIDTH * 0.08 }}
           size={25}
           color="gray"

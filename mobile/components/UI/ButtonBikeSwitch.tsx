@@ -31,7 +31,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           height: buttonHeight,
           borderColor: selectedId === id ? "#17809e" : isDark.text,
           backgroundColor:
-            selectedId === id ? buutonBackgroundColor : isDark.background,
+            selectedId === id ? buutonBackgroundColor : isDark.backgroundSecondary,
         },
       ]}
       onPress={() => setSelectedId(id)}

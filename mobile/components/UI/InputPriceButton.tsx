@@ -11,7 +11,7 @@ export default function InputPriceButton({ data, setData }: any) {
       width={"60%"}
       maxLength={4}
       placeholder="0"
-      style={{ marginVertical: 5, columnGap: 4 }}
+      style={{ marginVertical: 5, columnGap: 4, borderRadius: 12 }}
       prepend={<Text style={styles.text}>Price =</Text>}
       append={<Text style={styles.text}>TND</Text>}
       onChange={(value: string) =>

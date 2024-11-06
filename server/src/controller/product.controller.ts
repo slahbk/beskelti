@@ -16,7 +16,7 @@ import {
       };
     };
   }
-  @Controller('product')
+  @Controller('api/product')
   export class ProductController {
     constructor(private productService: ProductService) {}
   

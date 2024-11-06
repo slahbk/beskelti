@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -9,17 +9,18 @@ import {
   Dimensions,
   TouchableOpacity,
   ImageBackground,
+  Alert,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import InputPriceButton from "@/components/UI/InputPriceButton";
 import InputSectionCategory from "@/components/UI/InputSectionCategory";
 import * as ImagePicker from "expo-image-picker";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToastManager, { Toast } from "toastify-react-native";
 import { upload } from "cloudinary-react-native";
 import Loading from "@/components/UI/Loading";
@@ -29,13 +30,14 @@ import { myCld, options } from "@/cloudinary/cldConfig";
 import ButtonSubmit from "@/components/UI/ButtonSubmit";
 import InputTitle from "@/components/UI/InputTitle";
 import InputDescription from "@/components/UI/InputDescription";
+import { router } from "expo-router";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
   const dispatch = useDispatch();
-  const [productData, setProductData] = useState<ProductType>({
+  const [productData, setProductData] = React.useState<ProductType>({
     title: "test",
     price: "20",
     section: "Tools",
@@ -44,21 +46,37 @@ export default function Post() {
     image: [],
     userId: 1,
   });
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [fixedProgress, setFixedProgress] = useState<number>(0);
-  const [progress, setProgress] = useState<number>(0);
+  const [uploadedImages, setUploadedImages] = React.useState<string[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [fixedProgress, setFixedProgress] = React.useState<number>(0);
+  const [progress, setProgress] = React.useState<number>(0);
+  const controller = new AbortController();
 
-  // useEffect(() => {
-  //   const userId = SecureStore.getItem("userId");
-  //   const token = SecureStore.getItem("token");
-  //   if (!token) {
-  //     Redirect({ href: "/" });
-  //   }
-  //   if (userId) {
-  //     setProductData({ ...productData, userId: parseInt(userId) });
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    (async () => {
+      await AsyncStorage.getItem("token").then((token) => {
+        if (!token) {
+          Alert.alert("Your not logged in", " Please login first to post", [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Sign Up",
+              onPress: () => router.navigate("/auth/SignUp"),
+              style: "default",
+            },
+            {
+              text: "Log In",
+              onPress: () => router.navigate("/auth/Login"),
+              style: "default",
+            },
+          ]);
+        }
+      });
+    })();
+  }, []);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -117,6 +135,7 @@ export default function Post() {
   };
 
   const handleExit = () => {
+    controller.abort();
     setProgress(0);
     setUploadedImages([]);
     Toast.error("Product Not Added");

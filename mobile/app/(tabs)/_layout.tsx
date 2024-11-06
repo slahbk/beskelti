@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Tabs, useNavigation } from "expo-router";
+import { Link, Tabs } from "expo-router";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -21,7 +21,7 @@ export default function TabLayout() {
               style={{ marginRight: 10 }}
             >
               <Ionicons
-                name="search"
+                name="search-sharp"
                 size={25}
                 color={isDark.text}
               />

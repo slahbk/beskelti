@@ -81,6 +81,14 @@ export default function RootLayout() {
             name="product/Search"
             options={{ headerTitle: "Search", headerTitleAlign: "center" }}
           />
+          <Stack.Screen
+            name="auth/SignUp"
+            options={{ headerTitle: "Sign Up", headerTitleAlign: "center" }}
+          />
+          <Stack.Screen
+            name="auth/Login"
+            options={{ headerTitle: "Login", headerTitleAlign: "center" }}
+          />
         </Stack>
       </Provider>
     </ThemeProvider>

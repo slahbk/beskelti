@@ -26,6 +26,7 @@ export default function InputDescription({ productData, setProductData }: any) {
           {
             borderColor: isDark.border,
             color: isDark.text,
+            backgroundColor: isDark.backgroundSecondary,
           },
         ]}
         placeholder="Description..."

@@ -35,7 +35,7 @@ export default function InputSectionCategory({ data, setData }: any) {
       </Text>
     <Animated.View
       entering={FadeInDown}
-      style={[styles.container, { borderColor: isDark.border }]}
+      style={[styles.container, { borderColor: isDark.border, backgroundColor: isDark.backgroundSecondary }]}
     >
       <RNPickerSelect
         onValueChange={(value: any) => setData({ ...data, section: value })}

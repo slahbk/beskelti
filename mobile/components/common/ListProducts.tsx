@@ -46,7 +46,7 @@ export default function ListProducts({ data }: { data: any }) {
               width: itemWidth,
               height: itemHeight,
               shadowColor: isDark.shadow,
-              backgroundColor: isDark.background,
+              backgroundColor: isDark.backgroundSecondary,
             },
           ]}
         >
@@ -113,7 +113,7 @@ export default function ListProducts({ data }: { data: any }) {
   );
 
   return (
-    <Animated.View style={styles.container}>
+    <Animated.View>
       <Animated.View style={styles.titleBox}>
         <Text style={[styles.sectionTitle, { color: isDark.text }]}>
           {data.title}
@@ -141,14 +141,14 @@ export default function ListProducts({ data }: { data: any }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 4,
+    marginVertical: 0,
+
   },
   titleBox: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginHorizontal: 10,
-    marginBottom: 6,
   },
   sectionTitle: {
     fontFamily: "Poppins_600SemiBold",

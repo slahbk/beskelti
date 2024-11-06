@@ -44,7 +44,7 @@ export default function ProductSearch({ item }: any) {
         styles.item,
         {
           width: itemWidth,
-          backgroundColor: isDark.background,
+          backgroundColor: isDark.backgroundSecondary,
           shadowColor: isDark.shadow,
         },
       ]}
@@ -87,12 +87,10 @@ export default function ProductSearch({ item }: any) {
           <Text style={[styles.text, { color: isDark.text }]}>
             {item.price} TND
           </Text>
-          <Text style={[styles.text, { color: isDark.text }]}>
-            section: {item.section}
-          </Text>
+
           {item.category && (
             <Text style={[styles.text, { color: isDark.text }]}>
-              category: {item.category}
+              {item.category} bike
             </Text>
           )}
           <TouchableOpacity

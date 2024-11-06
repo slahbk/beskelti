@@ -10,7 +10,7 @@ import {
 import { UserService } from '../service/user.service';
 import { User as UserModel } from '@prisma/client';
 
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(private userService: UserService) {}
 

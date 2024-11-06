@@ -1,49 +1,63 @@
 import {
+  Button,
   Dimensions,
   FlatList,
   StyleSheet,
   Text,
   TextInput,
-  View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import { useSelector } from "react-redux";
 import { ProductType } from "@/types/ProductType";
 import ProductSearch from "@/components/UI/ProductSearch";
+import Animated from "react-native-reanimated";
+import ButtonFilterSearch from "@/components/UI/ButtonFilterSearch";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Search() {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
-  const [filteredData, setFilteredData] = React.useState([]);
+  const [dataSearch, setDataSearch] = React.useState([]);
+  const [filterBy, setFilterBy] = React.useState("all");
+  const [text, setText] = React.useState("");
+
   const product = useSelector((state: any) => state.products.data);
 
-  const handleSearch = (text: string) => {
-    if (text) {
-      const newData = product.filter((item: ProductType) => {
-        const itemData = `${item.title.toUpperCase()} 
-                          ${item.section.toUpperCase()} 
-                          ${item.category.toUpperCase()} `;
+  const handleSearch = () => {
+    if (text && filterBy === "all") {
+      const newData = product?.filter((item: ProductType) => {
+        const itemData = `${item.title.toUpperCase()}`;
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredData(newData);
+      setDataSearch(newData);
+    } else if (text && filterBy !== "all") {
+      const newData = product?.filter((item: ProductType) => {
+        const itemData = `${item.title.toUpperCase()}`;
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1 && item.section === filterBy;
+      });
+      setDataSearch(newData);
     } else {
-      setFilteredData([]);
+      setDataSearch([]);
     }
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [filterBy, text]);
 
   const renderItem = ({ item }: { item: ProductType }) => (
     <ProductSearch item={item} />
   );
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.container,
-        { flex: 1, backgroundColor: isDark.backgroundSecondary },
+        { flex: 1, backgroundColor: isDark.background },
       ]}
     >
       <TextInput
@@ -51,22 +65,59 @@ export default function Search() {
           styles.input,
           {
             borderColor: isDark.border,
-            backgroundColor: isDark.background,
+            backgroundColor: isDark.backgroundSecondary,
             color: isDark.text,
           },
         ]}
         placeholder="Search..."
         placeholderTextColor={isDark.text}
-        onChangeText={(text) => handleSearch(text)}
+        onChangeText={(text) => setText(text)}
       />
-      {filteredData.length > 0 && (
+      <Animated.View
+        style={[
+          {
+            width: "90%",
+            flexDirection: "row",
+            gap: 10,
+            alignSelf: "center",
+            marginTop: 10,
+          },
+        ]}
+      >
+        <Text
+          style={[
+            {
+              color: isDark.text,
+              alignSelf: "center",
+              fontSize: 12,
+              fontFamily: "Poppins_600SemiBold",
+            },
+          ]}
+        >
+          Filter by:
+        </Text>
+        <FlatList
+          horizontal
+          keyExtractor={(_, index) => index.toString()}
+          contentContainerStyle={{ alignItems: "center", gap: 15 }}
+          data={["Bikes", "Tools", "Accessories"]}
+          renderItem={({ item }) => (
+            <ButtonFilterSearch
+              filterBy={filterBy}
+              setFilterBy={setFilterBy}
+              label={item}
+            />
+          )}
+        />
+      </Animated.View>
+      {dataSearch?.length > 0 && (
         <Text style={[styles.total, { color: isDark.text }]}>
-          {filteredData.length} results found
+          {dataSearch?.length} results found
         </Text>
       )}
       <FlatList
         contentContainerStyle={styles.flatListContent}
-        data={filteredData}
+        data={dataSearch}
         renderItem={renderItem}
         numColumns={2}
         ListEmptyComponent={() => (
@@ -75,7 +126,7 @@ export default function Search() {
           </Text>
         )}
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -96,6 +147,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
   },
+
   total: {
     marginTop: 10,
     fontSize: 16,
