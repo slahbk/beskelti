@@ -76,7 +76,7 @@ export default function Post() {
         }
       });
     })();
-  }, []);
+  }, [productData]);
 
   const handleSubmit = async () => {
     setIsLoading(true);

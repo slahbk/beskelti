@@ -1,10 +1,13 @@
-export type UserType = {
-  id: number;
+import { ProductType } from "./ProductType";
+export interface UserType {
+  id?: number;
   fullName: string;
   email: string;
-  token: string;
+  password: string;
+  confirmPassword: string;
+  token?: string;
   company: string;
   avatar: string;
   phone: string;
-  products: []
+  products?: ProductType[]
 };

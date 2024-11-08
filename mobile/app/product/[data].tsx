@@ -87,7 +87,7 @@ export default function ProductDetails() {
         Company: {user?.company}
       </Text>
       <Text style={[styles.buyer, { color: isDark.text }]}>
-        Buyer: {user?.fullName} ({user?.products.length} products)
+        Buyer: {user?.fullName} ({user?.products?.length} products)
       </Text>
       <Text style={[styles.description, { color: isDark.text }]}>
         Description: {item.description}
