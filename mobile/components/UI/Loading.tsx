@@ -52,11 +52,11 @@ export default function Loading({
       <View style={styles.progressContainer}>
         <Text style={styles.text}>{Math.round((progress / 10) * 100)}%</Text>
         <Progress.Bar
-          indeterminateAnimationDuration={500}
-          animationType="timing"
+          animationType="spring"
           height={10}
           progress={progress / 10}
           width={200}
+          borderColor="white"
         />
       </View>
     </View>

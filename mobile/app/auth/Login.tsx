@@ -9,12 +9,14 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import InputEmail from "@/components/UI/InputEmail";
 import InputPassword from "@/components/UI/InputPassword";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { validateEmail } from "@/functions/validateEmail";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const statusBarHeight = StatusBar.currentHeight ?? 0;
 
@@ -28,42 +30,71 @@ export default function Login() {
   const [error, setError] = React.useState({
     email: false,
   });
+
+  const handleLogin = async () => {
+    if (validateEmail(form.email)) {
+      setError({ ...error, email: false });
+      await axios
+        .post(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/login`, form)
+        .then((res) => {
+          AsyncStorage.setItem("token", res.data.access_token);
+          router.replace("/");
+        })
+        .catch((err) => setError({ ...error, email: true }));
+    }
+  };
   return (
     <Animated.ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: isDark.background },
-      ]}
+      contentContainerStyle={[styles.container]}
+      alwaysBounceVertical
+      keyboardShouldPersistTaps={"always"}
     >
-      <InputEmail isDark={isDark} error={error} form={form} setForm={setForm} />
-      <InputPassword
-        label="password"
-        error={error}
-        form={form}
-        setForm={setForm}
-      />
-      <TouchableOpacity style={styles.button}>
-        <Text style={[styles.textButton]}>Login</Text>
-      </TouchableOpacity>
-      <Text>
-        Don't have an account?{" "}
-        <Link style={styles.link} href="/auth/SignUp">
-          Sign Up
-        </Link>
-      </Text>
+      <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
+      <View style={styles.innerContainer}>
+        <InputEmail
+          isDark={isDark}
+          error={error}
+          form={form}
+          setForm={setForm}
+        />
+        <InputPassword
+          label="password"
+          error={error}
+          form={form}
+          setForm={setForm}
+        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.button}
+          onPress={handleLogin}
+        >
+          <Text style={[styles.textButton]}>Login</Text>
+        </TouchableOpacity>
+        <Text>
+          Don't have an account?{" "}
+          <Link style={styles.link} href="/auth/SignUp">
+            Sign Up
+          </Link>
+        </Text>
+      </View>
     </Animated.ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    height: SCREEN_HEIGHT,
-    paddingTop: statusBarHeight,
-    alignItems: "center",
-    gap: 10,
+    height: SCREEN_HEIGHT + statusBarHeight,
+    paddingTop: SCREEN_HEIGHT * 0.1,
     width: SCREEN_WIDTH,
-    paddingHorizontal: SCREEN_WIDTH * 0.05,
+    paddingHorizontal: SCREEN_WIDTH * 0.08,
+    backgroundColor: "#081526",
+  },
+  innerContainer: {
+    padding: 25,
+    gap: 10,
+    backgroundColor: "#fff",
+    borderRadius: 30,
+    alignItems: "center",
   },
   button: {
     width: "100%",
@@ -83,5 +114,11 @@ const styles = StyleSheet.create({
   link: {
     color: "#22a6f1",
     textDecorationLine: "underline",
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    top: -50,
+    alignSelf: "center",
   },
 });

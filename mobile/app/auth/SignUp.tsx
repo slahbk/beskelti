@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  Image,
   StatusBar,
   StyleSheet,
   Text,
@@ -8,7 +9,6 @@ import {
 } from "react-native";
 import React from "react";
 import Animated from "react-native-reanimated";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import axios from "axios";
@@ -19,6 +19,7 @@ import { UserType } from "@/types/UserType";
 import { validatePsw } from "@/functions/validatePsw";
 import InputEmail from "@/components/UI/InputEmail";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const statusBarHeight = StatusBar.currentHeight ?? 0;
 
 export default function SignUp() {
   const colorScheme = useColorScheme();
@@ -61,76 +62,91 @@ export default function SignUp() {
     } else setError({ ...error, email: true, password: false });
   };
   return (
-    <KeyboardAwareScrollView
-      resetScrollToCoords={{ x: 0, y: 0 }}
-      automaticallyAdjustKeyboardInsets
-      keyboardShouldPersistTaps="always"
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: isDark.background },
-      ]}
-      scrollEnabled={false}
+    <Animated.ScrollView
+      contentContainerStyle={[styles.container]}
+      alwaysBounceVertical
+      keyboardShouldPersistTaps={"always"}
     >
-      <Text style={[styles.text, { color: isDark.text }]}>Full name:</Text>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            borderColor: isDark.border,
-            color: isDark.text,
-            backgroundColor: isDark.backgroundSecondary,
-          },
-        ]}
-        textContentType="name"
-        onChangeText={(e) => setForm({ ...form, fullName: e })}
-      />
-      <InputEmail form={form} setForm={setForm} isDark={isDark} error={error} />
-      <InputPassword
-        label="password"
-        form={form}
-        setForm={setForm}
-        error={error}
-      />
-      <InputPassword
-        label="confirmPassword"
-        form={form}
-        setForm={setForm}
-        error={error}
-      />
-      <Text style={[styles.text, { color: isDark.text }]}>Phone number:</Text>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            borderColor: isDark.border,
-            color: isDark.text,
-            backgroundColor: isDark.backgroundSecondary,
-          },
-        ]}
-        textContentType="telephoneNumber"
-        onChangeText={(e) => setForm({ ...form, phone: e })}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleForm}>
-        <Text style={[styles.textButton]}>Sign up</Text>
-      </TouchableOpacity>
-      <Text>
-        Already have an account?{" "}
-        <Link style={styles.link} href="/auth/Login">
-          Log in
-        </Link>
-      </Text>
-    </KeyboardAwareScrollView>
+      <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
+      <Animated.View style={styles.innerContainer}>
+        <Text style={[styles.text, { color: isDark.text }]}>Full name:</Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              borderColor: isDark.border,
+              color: isDark.text,
+              backgroundColor: isDark.backgroundSecondary,
+            },
+          ]}
+          textContentType="name"
+          onChangeText={(e) => setForm({ ...form, fullName: e })}
+        />
+        <InputEmail
+          form={form}
+          setForm={setForm}
+          isDark={isDark}
+          error={error}
+        />
+        <InputPassword
+          label="password"
+          form={form}
+          setForm={setForm}
+          error={error}
+        />
+        <InputPassword
+          label="confirmPassword"
+          form={form}
+          setForm={setForm}
+          error={error}
+        />
+        <Text style={[styles.text, { color: isDark.text }]}>Phone number:</Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              borderColor: isDark.border,
+              color: isDark.text,
+              backgroundColor: isDark.backgroundSecondary,
+            },
+          ]}
+          textContentType="telephoneNumber"
+          onChangeText={(e) => setForm({ ...form, phone: e })}
+        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.button}
+          onPress={handleForm}
+        >
+          <Text style={[styles.textButton]}>Sign up</Text>
+        </TouchableOpacity>
+        <Text>
+          Already have an account?{" "}
+          <Link style={styles.link} href="/auth/Login">
+            Log in
+          </Link>
+        </Text>
+      </Animated.View>
+    </Animated.ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: SCREEN_HEIGHT,
-    alignItems: "center",
-    paddingTop: StatusBar.currentHeight,
-    gap: 10,
+    height: SCREEN_HEIGHT + statusBarHeight,
+    paddingTop: SCREEN_HEIGHT * 0.1,
     width: SCREEN_WIDTH,
-    paddingHorizontal: SCREEN_WIDTH * 0.05,
+    paddingHorizontal: SCREEN_WIDTH * 0.08,
+    backgroundColor: "#081526",
+  },
+  innerContainer: {
+    flex: 1,
+    padding: 25,
+    gap: 10,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    alignItems: "center",
   },
   text: {
     fontFamily: "Poppins_600SemiBold_Italic",
@@ -159,6 +175,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#22a6f1",
     marginTop: 10,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    top: -50,
+    alignSelf: "center",
   },
   link: {
     color: "#22a6f1",

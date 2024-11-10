@@ -18,7 +18,18 @@ export class UserService {
         avatar: true,
         phone: true,
       },
-      where: { id: id },
+      where: { id },
+    });
+  }
+
+  async findOne(email: string): Promise<Partial<User | null>> {
+    return this.prisma.user.findUnique({
+      select: {
+        id: true,
+        email: true,
+        password: true,
+      },
+      where: { email },
     });
   }
 

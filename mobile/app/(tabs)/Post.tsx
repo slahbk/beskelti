@@ -31,6 +31,7 @@ import ButtonSubmit from "@/components/UI/ButtonSubmit";
 import InputTitle from "@/components/UI/InputTitle";
 import InputDescription from "@/components/UI/InputDescription";
 import { router } from "expo-router";
+import { chooseMethod } from "@/services/chooseMethod";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Post() {
@@ -59,7 +60,6 @@ export default function Post() {
           Alert.alert("Your not logged in", " Please login first to post", [
             {
               text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
               style: "cancel",
             },
             {
@@ -161,47 +161,9 @@ export default function Post() {
   };
 
   const pickImage = async (useCamera: boolean) => {
-    try {
-      const permissionMethod = useCamera
-        ? ImagePicker.requestCameraPermissionsAsync
-        : ImagePicker.requestMediaLibraryPermissionsAsync;
-      const { status } = await permissionMethod();
-
-      if (status !== "granted") {
-        Toast.error("Permission denied");
-        return;
-      }
-
-      const result = useCamera
-        ? await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.4,
-          })
-        : await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            aspect: [4, 3],
-            quality: 0.4,
-            allowsMultipleSelection: true,
-            selectionLimit: 5,
-          });
-
-      if (!result.canceled && result.assets) {
-        const newImageUris = result.assets.map((asset) => asset.uri);
-        setFixedProgress((prevProgress) => prevProgress + newImageUris.length);
-        setProductData((prevData) => ({
-          ...prevData,
-          image: prevData.image
-            ? [...prevData.image, ...newImageUris]
-            : newImageUris,
-        }));
-      }
-    } catch (error) {
-      console.error("Error picking image:", error);
-      Toast.error("Failed to pick image");
-    }
+    await chooseMethod(useCamera, setFixedProgress, setProductData);
   };
+  
   const removeImage = (index: number) => {
     setProductData((prevData: ProductType) => ({
       ...prevData,
@@ -225,6 +187,7 @@ export default function Post() {
         contentContainerStyle={styles.container}
         style={{ backgroundColor: isDark.background }}
         showsVerticalScrollIndicator={true}
+        alwaysBounceVertical
       >
         <ToastManager textStyle={styles.toastText} position="top" />
         <Animated.View style={styles.form}>

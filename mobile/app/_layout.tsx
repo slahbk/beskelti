@@ -83,11 +83,11 @@ export default function RootLayout() {
           />
           <Stack.Screen
             name="auth/SignUp"
-            options={{ headerTitle: "Sign Up", headerTitleAlign: "center" }}
+            options={{ headerTitle: "Sign Up", headerShown: false }}
           />
           <Stack.Screen
             name="auth/Login"
-            options={{ headerTitle: "Login", headerTitleAlign: "center" }}
+            options={{ headerTitle: "Login", headerShown: false }}
           />
         </Stack>
       </Provider>

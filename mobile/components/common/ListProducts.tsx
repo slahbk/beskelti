@@ -127,6 +127,7 @@ export default function ListProducts({ data }: { data: any }) {
         </TouchableOpacity>
       </Animated.View>
       <Animated.FlatList
+        alwaysBounceHorizontal  
         data={data.data || array}
         renderItem={renderItem}
         horizontal
