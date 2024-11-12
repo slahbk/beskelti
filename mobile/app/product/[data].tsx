@@ -16,6 +16,7 @@ import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
 import { fetchUserDetails } from "@/services/fetchUserDetails";
+import { Avatar } from "@kolking/react-native-avatar";
 import ButtonContact from "@/components/UI/ButtonContact";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -61,46 +62,73 @@ export default function ProductDetails() {
     <Animated.View
       style={[
         styles.detailsContainer,
-        { backgroundColor: isDark.backgroundSecondary },
+        {
+          backgroundColor: isDark.backgroundSecondary,
+          borderColor: isDark.background,
+        },
       ]}
     >
       <Animated.View
         style={[
           styles.priceContainer,
-          { backgroundColor: isDark.backgroundSecondary },
+          {
+            backgroundColor: isDark.backgroundSecondary,
+            borderColor: isDark.background,
+          },
         ]}
       >
         <Text style={[styles.price, { color: isDark.text }]}>
           {item.price} TND
         </Text>
       </Animated.View>
-      <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
-      <Text style={[styles.sectionTitle, { color: isDark.text }]}>
-        Section: {item.section}
-      </Text>
-      {item.category && (
-        <Text style={[styles.category, { color: isDark.text }]}>
-          Category: {item.category}
+      <Animated.ScrollView contentContainerStyle={{ rowGap: 10 }}>
+        <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
+        <Text style={[styles.sectionTitle, { color: isDark.text }]}>
+          Section: {item.section}
         </Text>
-      )}
-      <Text style={[styles.buyer, { color: isDark.text }]}>
-        Company: {user?.company}
-      </Text>
-      <Text style={[styles.buyer, { color: isDark.text }]}>
-        Buyer: {user?.fullName} ({user?.products?.length} products)
-      </Text>
-      <Text style={[styles.description, { color: isDark.text }]}>
-        Description: {item.description}
-      </Text>
-      <View style={styles.buyerContainer}>
-        <ButtonContact user={user} contact="phone" />
-        <ButtonContact user={user} contact="whatsapp" />
-      </View>
+        {item.category && (
+          <Text style={[styles.category, { color: isDark.text }]}>
+            Category: {item.category}
+          </Text>
+        )}
+        <Text style={[styles.buyer, { color: isDark.text }]}>
+          Company: {user?.company}
+        </Text>
+
+        <Text style={[styles.description, { color: isDark.text }]}>
+          Description: {item.description}
+        </Text>
+        <View style={styles.buyerContainer}>
+          <Avatar
+            name={user?.fullName}
+            size={50}
+            source={{ uri: user?.avatar }}
+            colorize={true}
+          />
+          <Text style={[styles.buyer, { color: isDark.text }]}>
+            {user?.fullName}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              columnGap: 8,
+            }}
+          >
+            <ButtonContact user={user} contact="phone" />
+            <ButtonContact user={user} contact="whatsapp" />
+          </View>
+        </View>
+      </Animated.ScrollView>
     </Animated.View>
   );
 
   return (
-    <Animated.ScrollView contentContainerStyle={[styles.container]}>
+    <Animated.ScrollView
+      contentContainerStyle={[
+        styles.container,
+        { backgroundColor: isDark.background },
+      ]}
+    >
       {visible && (
         <ImageView
           key={item.image.map((image: string, index: number) => index)}
@@ -126,7 +154,6 @@ export default function ProductDetails() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "white",
   },
   image: {
     width: SCREEN_WIDTH,
@@ -134,15 +161,14 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     position: "relative",
-    flex: 1,
+    height: SCREEN_HEIGHT * 0.6,
+    display: "flex",
     padding: 25,
     borderTopStartRadius: 20,
-    marginTop: -(SCREEN_HEIGHT * 0.15),
-    rowGap: 10,
+    // rowGap: 10,
     borderTopWidth: 8,
     borderEndWidth: 8,
     borderStartWidth: 8,
-    borderColor: "white",
   },
   priceContainer: {
     position: "absolute",
@@ -183,9 +209,11 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
   buyerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexShrink: 1,
     alignItems: "center",
+    flexDirection: "column",
+    gap: 8,
+    marginTop: 16,
   },
   description: {
     fontSize: 16,

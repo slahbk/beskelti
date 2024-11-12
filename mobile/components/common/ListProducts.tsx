@@ -26,6 +26,7 @@ export default function ListProducts({ data }: { data: any }) {
 
   const array = Array.from({ length: 3 }).map((_, index) => {
     return {
+      empty: true,
       id: index,
       title: data.title,
       image: [],
@@ -50,13 +51,15 @@ export default function ListProducts({ data }: { data: any }) {
             },
           ]}
         >
-          <Link
-            style={styles.link}
-            href={{
-              pathname: "/product/[data]",
-              params: { data: JSON.stringify(item) },
-            }}
-          ></Link>
+          {!item.empty && (
+            <Link
+              style={styles.link}
+              href={{
+                pathname: "/product/[data]",
+                params: { data: JSON.stringify(item) },
+              }}
+            />
+          )}
           <Skeleton
             animationDirection="horizontalLeft"
             isLoading={loading}
@@ -127,8 +130,8 @@ export default function ListProducts({ data }: { data: any }) {
         </TouchableOpacity>
       </Animated.View>
       <Animated.FlatList
-        alwaysBounceHorizontal  
-        data={data.data || array}
+        alwaysBounceHorizontal
+        data={data?.data?.length > 0 ? data.data : array}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -143,7 +146,6 @@ export default function ListProducts({ data }: { data: any }) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 0,
-
   },
   titleBox: {
     flexDirection: "row",

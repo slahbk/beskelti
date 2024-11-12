@@ -205,7 +205,7 @@ export default function ProductCard({ section }: { section: string }) {
         }
         ListEmptyComponent={() => (
           <Text style={[styles.emptyText, { color: isDark.text }]}>
-            No {selectedId === "all" ? "" : selectedId} bikes
+            No {selectedId === "all" ? "" : selectedId} {section}
           </Text>
         )}
       />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -49,7 +49,7 @@ export default function Post() {
   });
   const [uploadedImages, setUploadedImages] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [fixedProgress, setFixedProgress] = React.useState<number>(0);
+  // const [fixedProgress, setFixedProgress] = React.useState<number>(0);
   const [progress, setProgress] = React.useState<number>(0);
   const controller = new AbortController();
 
@@ -126,7 +126,7 @@ export default function Post() {
     }, 1000);
     productData.image = uploadedImages;
     await axios.post(
-      `${process.env.EXPO_PUBLIC_IP_ADDRESS}/product/add`,
+      `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/product/add`,
       productData
     );
     setIsLoading(false);
@@ -156,14 +156,13 @@ export default function Post() {
   };
 
   const resetProgress = () => {
-    setFixedProgress(0);
     setProgress(0);
   };
 
   const pickImage = async (useCamera: boolean) => {
-    await chooseMethod(useCamera, setFixedProgress, setProductData);
+    await chooseMethod(useCamera, setProductData);
   };
-  
+
   const removeImage = (index: number) => {
     setProductData((prevData: ProductType) => ({
       ...prevData,
@@ -171,14 +170,13 @@ export default function Post() {
         ? prevData.image.filter((_, i) => i !== index)
         : null,
     }));
-    setFixedProgress((prevProgress) => prevProgress - 1);
   };
 
   return (
     <>
       {isLoading && (
         <Loading
-          progress={(progress / fixedProgress) * 10}
+          progress={(progress / (productData?.image?.length ?? 0)) * 10}
           setIsLoading={setIsLoading}
           handleExit={handleExit}
         />

@@ -4,7 +4,6 @@ import { Toast } from "toastify-react-native";
 
 export const chooseMethod = async (
   useCamera: boolean,
-  setFixedProgress: React.Dispatch<React.SetStateAction<number>>,
   setProductData: React.Dispatch<React.SetStateAction<ProductType>>
 ) => {
   try {
@@ -35,7 +34,6 @@ export const chooseMethod = async (
 
         if (!result.canceled && result.assets) {
           const newImageUris = result.assets.map((asset) => asset.uri);
-          setFixedProgress((prevProgress) => prevProgress + newImageUris.length);
           setProductData((prevData) => ({
             ...prevData,
             image: prevData.image

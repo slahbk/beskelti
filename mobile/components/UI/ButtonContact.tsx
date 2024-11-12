@@ -41,9 +41,9 @@ export default function ButtonContact({ user, contact }: any) {
 
 const styles = StyleSheet.create({
   button: {
-    width: "45%",
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
+    width: "auto",
+    padding: 12,
+    borderRadius: 25,
+    alignSelf: "center",
   },
 });

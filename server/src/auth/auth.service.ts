@@ -24,4 +24,9 @@ export class AuthService {
       }),
     };
   }
+  async validateToken(token: string) {
+    return this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET,
+    });
+  }
 }
