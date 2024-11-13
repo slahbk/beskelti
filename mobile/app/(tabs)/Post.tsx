@@ -55,7 +55,7 @@ export default function Post() {
 
   React.useEffect(() => {
     (async () => {
-      await AsyncStorage.getItem("token").then((token) => {
+      await AsyncStorage.getItem("token").then(async (token) => {
         if (!token) {
           Alert.alert("Your not logged in", " Please login first to post", [
             {
@@ -73,6 +73,22 @@ export default function Post() {
               style: "default",
             },
           ]);
+        } else {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          await axios
+            .post(
+              `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/check-token`,
+              {
+                token: token,
+              }
+            )
+            .then((res) => {
+              console.log(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+              router.replace("/auth/Login");
+            });
         }
       });
     })();
@@ -113,10 +129,6 @@ export default function Post() {
       Toast.error("Failed to add product");
       setUploadedImages([]);
     }
-    // const id = "8";
-    // const token = "lisbfvilqerjk-----sdfvefdv-------_sbviulsbvhhsfv";
-    // SecureStore.setItemAsync("userId", id);
-    // SecureStore.setItemAsync("token", token);
   };
 
   const handleUpload = async () => {

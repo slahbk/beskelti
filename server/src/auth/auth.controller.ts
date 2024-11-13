@@ -9,4 +9,10 @@ export class AuthController {
   signIn(@Body() signInDto: Record<string, any>) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('check-token')
+  checkToken(@Body() auth: Record<string, any>) {
+    return this.authService.validateToken(auth.token);
+  }
 }
