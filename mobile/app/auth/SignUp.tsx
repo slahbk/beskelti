@@ -69,7 +69,7 @@ export default function SignUp() {
     >
       <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
       <Animated.View style={styles.innerContainer}>
-        <Text style={[styles.text, { color: isDark.text }]}>Full name:</Text>
+        <Text style={[styles.text]}>Full name:</Text>
         <TextInput
           style={[
             styles.input,
@@ -100,7 +100,7 @@ export default function SignUp() {
           setForm={setForm}
           error={error}
         />
-        <Text style={[styles.text, { color: isDark.text }]}>Phone number:</Text>
+        <Text style={[styles.text,]}>Phone number:</Text>
         <TextInput
           style={[
             styles.input,
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
+    color: "#000",
     fontFamily: "Poppins_600SemiBold_Italic",
     fontSize: 12,
     letterSpacing: 3,

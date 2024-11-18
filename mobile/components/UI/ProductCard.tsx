@@ -13,7 +13,7 @@ import Skeleton from "react-native-reanimated-skeleton";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useDispatch, useSelector } from "react-redux";
-import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
+import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { Link } from "expo-router";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import ButtonBikeSwitch from "./ButtonBikeSwitch";
@@ -176,10 +176,7 @@ export default function ProductCard({ section }: { section: string }) {
 
   return (
     <Animated.View
-      style={[
-        styles.container,
-        { backgroundColor: isDark.background },
-      ]}
+      style={[styles.container, { backgroundColor: isDark.background }]}
     >
       {section === "Bikes" && (
         <ButtonBikeSwitch
@@ -188,9 +185,7 @@ export default function ProductCard({ section }: { section: string }) {
         />
       )}
       <Animated.FlatList
-        itemLayoutAnimation={LinearTransition}
-        initialNumToRender={4}
-        maxToRenderPerBatch={10}
+        itemLayoutAnimation={FadeInUp}
         data={filteredData || emptyArray}
         ref={itemRef}
         renderItem={renderItem}

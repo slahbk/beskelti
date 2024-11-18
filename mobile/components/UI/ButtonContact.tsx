@@ -32,7 +32,7 @@ export default function ButtonContact({ user, contact }: any) {
     >
       <Ionicons
         name={contact === "phone" ? "call" : "logo-whatsapp"}
-        size={30}
+        size={26}
         color="white"
       />
     </TouchableOpacity>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   button: {
     width: "auto",
     padding: 12,
-    borderRadius: 25,
+    borderRadius: 22,
     alignSelf: "center",
   },
 });

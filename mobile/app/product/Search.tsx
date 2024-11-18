@@ -1,7 +1,7 @@
 import {
-  Button,
   Dimensions,
   FlatList,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -108,6 +108,7 @@ export default function Search() {
               label={item}
             />
           )}
+          contentInsetAdjustmentBehavior="automatic"
         />
       </Animated.View>
       {dataSearch?.length > 0 && (
@@ -125,6 +126,7 @@ export default function Search() {
             Nothing found.
           </Text>
         )}
+        contentInsetAdjustmentBehavior="automatic"
       />
     </Animated.View>
   );
@@ -133,11 +135,13 @@ export default function Search() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: StatusBar.currentHeight,
   },
   flatListContent: {
     padding: 10,
     alignItems: "center",
+    zIndex: 1000,
+    height: "100%",
   },
   input: {
     width: "90%",

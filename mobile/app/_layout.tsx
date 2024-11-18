@@ -3,7 +3,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -30,12 +30,15 @@ import {
 } from "@expo-google-fonts/poppins";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
+import { Colors } from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const isDark = Colors[colorScheme ?? "light"];
   let [loaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -71,15 +74,38 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerStyle: { backgroundColor: isDark.backgroundSecondary },
+              headerShown: true,
+              headerTitle: "",
+              headerRight: () => (
+                <Ionicons
+                  name="search-sharp"
+                  size={25}
+                  color={isDark.text}
+                  onPress={() => router.navigate("/product/Search")}
+                />
+              ),
+              headerLeft: () => (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={30}
+                  color={isDark.text}
+                  onPress={() => router.navigate("/auth/SignUp")}
+                />
+              ),
+            }}
+          />
           <Stack.Screen name="+not-found" />
           <Stack.Screen
             name="product/[data]"
-            options={{ headerTitle: "Detail", headerTitleAlign: "center" }}
+            options={{ headerTitle: "", headerTransparent: true }}
           />
           <Stack.Screen
             name="product/Search"
-            options={{ headerTitle: "Search", headerTitleAlign: "center" }}
+            options={{ headerTitle: "Search", headerShown: false }}
           />
           <Stack.Screen
             name="auth/SignUp"

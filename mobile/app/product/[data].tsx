@@ -3,6 +3,7 @@ import {
   Image,
   ImageBackground,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -153,7 +154,8 @@ export default function ProductDetails() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    // flexGrow: 1,
+    paddingTop: StatusBar.currentHeight,
   },
   image: {
     width: SCREEN_WIDTH,
@@ -161,11 +163,10 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     position: "relative",
-    height: SCREEN_HEIGHT * 0.6,
-    display: "flex",
+    height: SCREEN_HEIGHT * 0.7,
+    flex: 1,
     padding: 25,
     borderTopStartRadius: 20,
-    // rowGap: 10,
     borderTopWidth: 8,
     borderEndWidth: 8,
     borderStartWidth: 8,
@@ -209,11 +210,11 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
   buyerContainer: {
-    flexShrink: 1,
+    flex: 1,
     alignItems: "center",
     flexDirection: "column",
     gap: 8,
-    marginTop: 16,
+    marginTop: 26,
   },
   description: {
     fontSize: 16,

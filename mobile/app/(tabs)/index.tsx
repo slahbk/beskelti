@@ -55,8 +55,9 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: height * 0.04,
+    gap: height * 0.03,
     paddingBottom: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     paddingHorizontal: width * 0.02,
+    paddingTop: height * 0.02,
   },
 });

@@ -15,7 +15,7 @@ export class ProductService {
     }
 
     async getAllProducts(): Promise<Product[]> {
-        return this.prisma.product.findMany();
+        return this.prisma.product.findMany({orderBy: {id: 'desc'}});
     }
 
     async createProduct(data: Prisma.ProductCreateInput): Promise<Product> {

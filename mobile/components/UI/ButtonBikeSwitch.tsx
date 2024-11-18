@@ -20,7 +20,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
 
   const buttonWidth = width * 0.3; // 30% of screen width
   const buttonHeight = width * 0.15; // 15% of screen width
-  const buutonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#17809e";
+  const buttonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#17809e";
 
   const renderButton = (id: string, label: string, icon?: React.ReactNode) => (
     <TouchableOpacity
@@ -31,7 +31,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
           height: buttonHeight,
           borderColor: selectedId === id ? "#17809e" : isDark.text,
           backgroundColor:
-            selectedId === id ? buutonBackgroundColor : isDark.backgroundSecondary,
+            selectedId === id ? buttonBackgroundColor : isDark.backgroundSecondary,
         },
       ]}
       onPress={() => setSelectedId(id)}

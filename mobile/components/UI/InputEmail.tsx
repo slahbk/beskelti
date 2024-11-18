@@ -4,7 +4,7 @@ import React from "react";
 export default function InputEmail({ form, setForm, error, isDark }: any) {
   return (
     <>
-    <Text style={[styles.text, { color: isDark.text }]}>Email:</Text>
+    <Text style={[styles.text]}>Email:</Text>
       <TextInput
         style={[
           styles.input,
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   text: {
+    color: "#000",
     fontFamily: "Poppins_600SemiBold_Italic",
     fontSize: 12,
     letterSpacing: 3,

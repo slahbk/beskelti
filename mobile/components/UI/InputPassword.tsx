@@ -11,7 +11,7 @@ export default function InputPassword({ form, setForm, label, error }: any) {
 
   return (
     <>
-      <Text style={[styles.text, { color: isDark.text }]}>
+      <Text style={[styles.text]}>
         {label === "password" ? "Password" : "Confirm Password"}
       </Text>
       <View style={{ width: "100%", position: "relative" }}>
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   text: {
+    color: "#000",
     fontFamily: "Poppins_600SemiBold_Italic",
     fontSize: 12,
     letterSpacing: 3,

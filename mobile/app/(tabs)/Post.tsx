@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -10,13 +10,13 @@ import {
   TouchableOpacity,
   ImageBackground,
   Alert,
+  Text,
 } from "react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import InputPriceButton from "@/components/UI/InputPriceButton";
 import InputSectionCategory from "@/components/UI/InputSectionCategory";
-import * as ImagePicker from "expo-image-picker";
 import { ProductType } from "@/types/ProductType";
 import Animated from "react-native-reanimated";
 import axios from "axios";
@@ -49,7 +49,6 @@ export default function Post() {
   });
   const [uploadedImages, setUploadedImages] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  // const [fixedProgress, setFixedProgress] = React.useState<number>(0);
   const [progress, setProgress] = React.useState<number>(0);
   const controller = new AbortController();
 
@@ -74,27 +73,40 @@ export default function Post() {
             },
           ]);
         } else {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          await axios
-            .post(
+          try {
+            await axios.post(
               `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/check-token`,
               {
                 token: token,
               }
-            )
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-              router.replace("/auth/Login");
-            });
+            );
+          } catch (error) {
+            console.log(error);
+            router.replace("/auth/Login");
+          }
         }
       });
     })();
   }, [productData]);
 
   const handleSubmit = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if (token) {
+      const res = await axios.post(
+        `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/check-token`,
+        {
+          token: token,
+        }
+      );
+      if (res.status !== 200) {
+        Toast.error("expired login");
+        router.replace("/auth/Login");
+      }
+    }
+    else {
+      Toast.error("expired login");
+      router.replace("/auth/Login");
+    }
     setIsLoading(true);
     try {
       productData.image?.forEach(async (image) => {
@@ -124,6 +136,9 @@ export default function Post() {
         });
       });
     } catch (error) {
+      if (error === "auth error - invalid token") {
+        router.replace("/auth/Login");
+      }
       setIsLoading(false);
       setProgress(0);
       Toast.error("Failed to add product");
@@ -132,16 +147,14 @@ export default function Post() {
   };
 
   const handleUpload = async () => {
-    setTimeout(async () => {
-      Toast.success("Product Added Successfully");
-      dispatch(fetchProducts() as any);
-    }, 1000);
     productData.image = uploadedImages;
     await axios.post(
       `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/product/add`,
       productData
     );
     setIsLoading(false);
+    Toast.success("Product Added Successfully");
+    dispatch(fetchProducts() as any);
     resetForm();
     resetProgress();
   };
@@ -193,13 +206,13 @@ export default function Post() {
           handleExit={handleExit}
         />
       )}
+      <ToastManager textStyle={styles.toastText} position="top" />
       <Animated.ScrollView
         contentContainerStyle={styles.container}
         style={{ backgroundColor: isDark.background }}
         showsVerticalScrollIndicator={true}
         alwaysBounceVertical
       >
-        <ToastManager textStyle={styles.toastText} position="top" />
         <Animated.View style={styles.form}>
           <InputPriceButton data={productData} setData={setProductData} />
           <InputTitle
@@ -252,39 +265,44 @@ export default function Post() {
             />
           </Animated.View>
           {productData.image && productData.image.length > 0 && (
-            <Animated.FlatList
-              data={productData.image}
-              horizontal
-              renderItem={({ item, index }) => (
-                <Animated.View style={styles.imageWrapper}>
-                  <ImageBackground
-                    source={{
-                      uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
-                    }}
-                    style={styles.image}
-                    resizeMode="contain"
-                  >
-                    <Image
-                      source={{ uri: item }}
-                      resizeMode="contain"
+            <View style={{ width: "95%" }}>
+              <Text style={styles.imageCount}>
+                {productData.image.length} Images Selected
+              </Text>
+              <Animated.FlatList
+                data={productData.image}
+                horizontal
+                renderItem={({ item, index }) => (
+                  <Animated.View style={styles.imageWrapper}>
+                    <ImageBackground
+                      source={{
+                        uri: "https://res.cloudinary.com/dzxtonbuu/image/upload/v1730537104/beskelti%20app/yaeylehhb39xdocoicas.png",
+                      }}
                       style={styles.image}
-                      alt={`Selected image ${index + 1}`}
-                    />
-                  </ImageBackground>
-                  <Pressable
-                    style={styles.deleteButton}
-                    onPress={() => removeImage(index)}
-                  >
-                    <Ionicons
-                      name="trash-outline"
-                      size={SCREEN_WIDTH * 0.05}
-                      color="red"
-                    />
-                  </Pressable>
-                </Animated.View>
-              )}
-              keyExtractor={(item, index) => `${item}-${index}`}
-            />
+                      resizeMode="cover"
+                    >
+                      <Image
+                        source={{ uri: item }}
+                        resizeMode="cover"
+                        style={styles.image}
+                        alt={`Selected image ${index + 1}`}
+                      />
+                    </ImageBackground>
+                    <Pressable
+                      style={styles.deleteButton}
+                      onPress={() => removeImage(index)}
+                    >
+                      <Ionicons
+                        name="trash-outline"
+                        size={SCREEN_WIDTH * 0.05}
+                        color="red"
+                      />
+                    </Pressable>
+                  </Animated.View>
+                )}
+                keyExtractor={(item, index) => `${item}-${index}`}
+              />
+            </View>
           )}
         </Animated.View>
       </Animated.ScrollView>
@@ -300,7 +318,7 @@ const styles = StyleSheet.create({
   imageWrapper: {
     width: SCREEN_WIDTH * 0.4,
     height: SCREEN_WIDTH * 0.4,
-    marginRight: SCREEN_WIDTH * 0.02,
+    marginRight: SCREEN_WIDTH * 0.03,
     position: "relative",
   },
   form: {
@@ -328,7 +346,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 8,
+    borderRadius: 12,
   },
   deleteButton: {
     position: "absolute",
@@ -345,5 +363,11 @@ const styles = StyleSheet.create({
   toastText: {
     fontSize: 14,
     fontFamily: "Poppins_500Medium",
+  },
+  imageCount: {
+    fontSize: 14,
+    fontFamily: "Poppins_400Regular",
+    color: "gray",
+    alignSelf: "baseline",
   },
 });

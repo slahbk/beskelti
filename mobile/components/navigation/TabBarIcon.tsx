@@ -41,7 +41,7 @@ export function TabBarIcon({ source, focused, label, ...rest }: lottie) {
         {...rest}
       />
       {focused && (
-        <Animated.View>
+ 
           <Text
             style={{
               fontSize: 11,
@@ -52,7 +52,7 @@ export function TabBarIcon({ source, focused, label, ...rest }: lottie) {
           >
             {label}
           </Text>
-        </Animated.View>
+        
       )}
     </Animated.View>
   );

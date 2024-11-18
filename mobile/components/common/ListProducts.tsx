@@ -16,6 +16,7 @@ import Animated, {
   FadeInRight,
   LinearTransition,
 } from "react-native-reanimated";
+import { ThemedText } from "../ThemedText";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -131,7 +132,7 @@ export default function ListProducts({ data }: { data: any }) {
       </Animated.View>
       <Animated.FlatList
         alwaysBounceHorizontal
-        data={data?.data?.length > 0 ? data.data : array}
+        data={data?.data?.length > 0 ? data.data.slice(0, 6) : array}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}

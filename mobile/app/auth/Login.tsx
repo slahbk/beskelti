@@ -38,10 +38,11 @@ export default function Login() {
         .post(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/login`, form)
         .then((res) => {
           AsyncStorage.setItem("token", res.data.access_token);
-          router.replace("/");
+          axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access_token}`;
+          router.replace("/(tabs)/Post");
         })
         .catch((err) => setError({ ...error, email: true }));
-    }
+    } else setError({ ...error, email: true });
   };
   return (
     <Animated.ScrollView

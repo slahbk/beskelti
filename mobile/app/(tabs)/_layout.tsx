@@ -12,31 +12,6 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerLeft: () => (
-          <Link
-            href={{
-              pathname: "/product/Search",
-              params: { search: "search" },
-            }}
-            style={{ marginLeft: 10 }}
-          >
-            <Ionicons name="search-sharp" size={25} color={isDark.text} />
-          </Link>
-        ),
-        headerRight: () => (
-          <Link
-            href={{
-              pathname: "/auth/SignUp",
-            }}
-            style={{ marginRight: 10 }}
-          >
-            <Ionicons
-              name="person-circle-outline"
-              size={30}
-              color={isDark.text}
-            />
-          </Link>
-        ),
         tabBarActiveTintColor: isDark.tint,
         headerShown: true,
         headerTitleAlign: "center",
@@ -57,6 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           title: "Home",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
@@ -74,6 +50,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Bikes"
         options={{
+          headerShown: false,
           title: "Bikes",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
@@ -91,6 +68,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Post"
         options={{
+          headerShown: false,
           title: "Add new",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
@@ -108,6 +86,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Accessories"
         options={{
+          headerShown: false,
           title: "Accessories",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
@@ -125,6 +104,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Tools"
         options={{
+          headerShown: false,
           title: "Tools",
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabBarIcon
