@@ -69,20 +69,15 @@ export default function SignUp() {
     >
       <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
       <Animated.View style={styles.innerContainer}>
-        <Text style={[styles.text]}>Full name:</Text>
-        <TextInput
-          style={[
-            styles.input,
-            {
-              borderColor: isDark.border,
-              color: isDark.text,
-              backgroundColor: isDark.backgroundSecondary,
-            },
-          ]}
-          textContentType="name"
-          onChangeText={(e) => setForm({ ...form, fullName: e })}
+        <InputEmail
+          label="fullName"
+          form={form}
+          setForm={setForm}
+          isDark={isDark}
+          error={error}
         />
         <InputEmail
+          label="email"
           form={form}
           setForm={setForm}
           isDark={isDark}
@@ -100,18 +95,12 @@ export default function SignUp() {
           setForm={setForm}
           error={error}
         />
-        <Text style={[styles.text,]}>Phone number:</Text>
-        <TextInput
-          style={[
-            styles.input,
-            {
-              borderColor: isDark.border,
-              color: isDark.text,
-              backgroundColor: isDark.backgroundSecondary,
-            },
-          ]}
-          textContentType="telephoneNumber"
-          onChangeText={(e) => setForm({ ...form, phone: e })}
+        <InputEmail
+          label="phone"
+          form={form}
+          setForm={setForm}
+          isDark={isDark}
+          error={error}
         />
         <TouchableOpacity
           activeOpacity={0.7}

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 
@@ -14,7 +14,20 @@ export default function InputPassword({ form, setForm, label, error }: any) {
       <Text style={[styles.text]}>
         {label === "password" ? "Password" : "Confirm Password"}
       </Text>
-      <View style={{ width: "100%", position: "relative" }}>
+      <View style={styles.container}>
+        <Ionicons
+          name={form[label] ? "key" : "key-outline"}
+          size={20}
+          color={form[label] ? "#555" : "#b5b5b5"}
+          style={{ position: "absolute", zIndex: 10, marginLeft: 6 }}
+        />
+        <Ionicons
+          onPress={() => setVisible(!visible)}
+          name={visible ? "eye-off" : "eye"}
+          size={20}
+          color={"#555"}
+          style={{ position: "absolute", zIndex: 10, marginRight: 6, right: 0 }}
+        />
         <TextInput
           style={[
             styles.input,
@@ -34,20 +47,8 @@ export default function InputPassword({ form, setForm, label, error }: any) {
           secureTextEntry={visible}
           onChangeText={(e) => setForm({ ...form, [label]: e })}
         />
-        <Ionicons
-          onPress={() => setVisible(!visible)}
-          name={visible ? "eye-off" : "eye"}
-          size={20}
-          color={isDark.text}
-          style={{
-            position: "absolute",
-            right: 10,
-            top: "50%",
-            transform: [{ translateY: -10 }],
-          }}
-        />
       </View>
-      {error[label] && label === "password" && (
+      {error[label] && (
         <Text style={styles.error}>Invalid password</Text>
       )}
     </>
@@ -55,11 +56,18 @@ export default function InputPassword({ form, setForm, label, error }: any) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
+  },
   input: {
     borderWidth: 1,
     borderRadius: 5,
     width: "100%",
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 32,
   },
   text: {
     color: "#000",

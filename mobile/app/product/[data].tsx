@@ -82,24 +82,30 @@ export default function ProductDetails() {
           {item.price} TND
         </Text>
       </Animated.View>
-      <Animated.ScrollView contentContainerStyle={{ rowGap: 10 }}>
-        <Text style={[styles.title, { color: isDark.text }]}>{item.title}</Text>
-        <Text style={[styles.sectionTitle, { color: isDark.text }]}>
-          Section: {item.section}
-        </Text>
-        {item.category && (
-          <Text style={[styles.category, { color: isDark.text }]}>
-            Category: {item.category}
+      <Animated.ScrollView
+        contentContainerStyle={{flex: 1, justifyContent: "space-between" }}
+      >
+        <View style={{ rowGap: 10 }}>
+          <Text style={[styles.title, { color: isDark.text }]}>
+            {item.title}
           </Text>
-        )}
-        <Text style={[styles.buyer, { color: isDark.text }]}>
-          Company: {user?.company}
-        </Text>
+          <Text style={[styles.sectionTitle, { color: isDark.text }]}>
+            Section: {item.section}
+          </Text>
+          {item.category && (
+            <Text style={[styles.category, { color: isDark.text }]}>
+              Category: {item.category}
+            </Text>
+          )}
+          <Text style={[styles.buyer, { color: isDark.text }]}>
+            Company: {user?.company}
+          </Text>
 
-        <Text style={[styles.description, { color: isDark.text }]}>
-          Description: {item.description}
-        </Text>
-        <View style={styles.buyerContainer}>
+          <Text style={[styles.description, { color: isDark.text }]}>
+            Description: {item.description}
+          </Text>
+        </View>
+        <View style={[styles.buyerContainer, {borderColor: isDark.background}]}>
           <Avatar
             name={user?.fullName}
             size={50}
@@ -137,13 +143,16 @@ export default function ProductDetails() {
           imageIndex={0}
           visible={visible}
           onRequestClose={() => setVisible(false)}
+          doubleTapToZoomEnabled
+          animationType="slide"
         />
       )}
       <Carousel
-        loop={false}
+        loop={true}
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT * 0.3}
-        autoPlay={false}
+        autoPlay={true}
+        autoPlayInterval={3000}
         data={item.image}
         renderItem={renderCarouselItem}
       />
@@ -210,11 +219,16 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_400Regular",
   },
   buyerContainer: {
-    flex: 1,
+    alignSelf: "center",
     alignItems: "center",
     flexDirection: "column",
     gap: 8,
     marginTop: 26,
+    borderColor: "white",
+    borderWidth: 6,
+    borderRadius: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 50,
   },
   description: {
     fontSize: 16,

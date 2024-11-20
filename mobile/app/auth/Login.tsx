@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Animated,
   Dimensions,
   Image,
@@ -30,19 +31,29 @@ export default function Login() {
   const [error, setError] = React.useState({
     email: false,
   });
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleLogin = async () => {
     if (validateEmail(form.email)) {
       setError({ ...error, email: false });
+      setIsLoading(true);
       await axios
         .post(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/login`, form)
         .then((res) => {
           AsyncStorage.setItem("token", res.data.access_token);
-          axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access_token}`;
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${res.data.access_token}`;
           router.replace("/(tabs)/Post");
         })
-        .catch((err) => setError({ ...error, email: true }));
-    } else setError({ ...error, email: true });
+        .catch((err) => {
+          setIsLoading(false);
+          setError({ ...error, email: true });
+        });
+    } else {
+      setIsLoading(false);
+      setError({ ...error, email: true });
+    }
   };
   return (
     <Animated.ScrollView
@@ -53,6 +64,7 @@ export default function Login() {
       <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
       <View style={styles.innerContainer}>
         <InputEmail
+          label="email"
           isDark={isDark}
           error={error}
           form={form}
@@ -68,8 +80,11 @@ export default function Login() {
           activeOpacity={0.7}
           style={styles.button}
           onPress={handleLogin}
+          disabled={isLoading}
         >
-          <Text style={[styles.textButton]}>Login</Text>
+          <Text style={[styles.textButton]}>
+            {isLoading ? <ActivityIndicator size={"large"} /> : "Login"}
+          </Text>
         </TouchableOpacity>
         <Text>
           Don't have an account?{" "}
