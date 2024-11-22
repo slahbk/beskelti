@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchUserDetails = async ({ userId }: { userId: number }) => {
+export const useFetchUser = async ({ userId }: { userId: number }) => {
   try {
     const response = await axios(
       `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/user/${userId}`

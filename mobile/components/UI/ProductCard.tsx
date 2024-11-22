@@ -17,6 +17,7 @@ import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { Link } from "expo-router";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import ButtonBikeSwitch from "./ButtonBikeSwitch";
+import { fetchUser } from "@/redux/reducers/userSlice";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function ProductCard({ section }: { section: string }) {
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 10,
     shadowRadius: 10,
-    elevation: 4,
+    elevation: 3,
   },
   text: {
     fontSize: 14,

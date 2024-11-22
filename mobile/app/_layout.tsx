@@ -77,8 +77,9 @@ export default function RootLayout() {
           <Stack.Screen
             name="(tabs)"
             options={{
-              headerStyle: { backgroundColor: isDark.backgroundSecondary },
+              headerStyle: { backgroundColor: isDark.background },
               headerShown: true,
+              headerShadowVisible: true,
               headerTitle: "",
               headerRight: () => (
                 <Ionicons

@@ -39,8 +39,8 @@ export default function Login() {
       setIsLoading(true);
       await axios
         .post(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/login`, form)
-        .then((res) => {
-          AsyncStorage.setItem("token", res.data.access_token);
+        .then(async (res) => {
+          await AsyncStorage.setItem("token", res.data.access_token);
           axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${res.data.access_token}`;
@@ -83,7 +83,7 @@ export default function Login() {
           disabled={isLoading}
         >
           <Text style={[styles.textButton]}>
-            {isLoading ? <ActivityIndicator size={"large"} /> : "Login"}
+            {isLoading ? <ActivityIndicator size={"small"} /> : "Login"}
           </Text>
         </TouchableOpacity>
         <Text>

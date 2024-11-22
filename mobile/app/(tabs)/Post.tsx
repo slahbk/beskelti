@@ -27,6 +27,7 @@ import Loading from "@/components/UI/Loading";
 import { useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/reducers/productSlice";
 import { myCld, options } from "@/cloudinary/cldConfig";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import ButtonSubmit from "@/components/UI/ButtonSubmit";
 import InputTitle from "@/components/UI/InputTitle";
 import InputDescription from "@/components/UI/InputDescription";
@@ -39,13 +40,13 @@ export default function Post() {
   const isDark = Colors[colorScheme ?? "light"];
   const dispatch = useDispatch();
   const [productData, setProductData] = React.useState<ProductType>({
-    title: "test",
-    price: "20",
-    section: "Tools",
+    userId: 0,
+    title: "",
+    price: "",
+    section: "",
     category: "",
-    description: "test",
+    description: "",
     image: [],
-    userId: 1,
   });
   const [uploadedImages, setUploadedImages] = React.useState<string[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -91,6 +92,7 @@ export default function Post() {
 
   const handleSubmit = async () => {
     const token = await AsyncStorage.getItem("token");
+    const decodedToken = jwtDecode<JwtPayload>(token as string);
     if (token) {
       const res = await axios.post(
         `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/check-token`,
@@ -107,6 +109,7 @@ export default function Post() {
       Toast.error("expired login");
       router.replace("/auth/Login");
     }
+    productData.userId = Number(decodedToken.sub);
     setIsLoading(true);
     try {
       productData.image?.forEach(async (image) => {

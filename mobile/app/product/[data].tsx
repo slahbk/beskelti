@@ -16,27 +16,25 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
-import { fetchUserDetails } from "@/services/fetchUserDetails";
 import { Avatar } from "@kolking/react-native-avatar";
 import ButtonContact from "@/components/UI/ButtonContact";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "@/redux/reducers/userSlice";
+import Skeleton from "react-native-reanimated-skeleton";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function ProductDetails() {
+  const dispatch = useDispatch();
   const { data } = useLocalSearchParams();
   const item = JSON.parse(data as string);
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
-  const [user, setUser] = useState<UserType | null>(null);
   const [visible, setVisible] = useState(false);
-
-  const fetchUser = useCallback(async () => {
-    const response = fetchUserDetails({ userId: item.userId });
-    setUser(await response);
-  }, [item.userId]);
+  const user = useSelector((state: any) => state.user);
 
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    dispatch(fetchUser({ userId: item.userId }) as any);
+  }, [dispatch]);
 
   const renderCarouselItem = useCallback(
     ({ item }: { item: string }) => (
@@ -83,7 +81,7 @@ export default function ProductDetails() {
         </Text>
       </Animated.View>
       <Animated.ScrollView
-        contentContainerStyle={{flex: 1, justifyContent: "space-between" }}
+        contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}
       >
         <View style={{ rowGap: 10 }}>
           <Text style={[styles.title, { color: isDark.text }]}>
@@ -97,32 +95,65 @@ export default function ProductDetails() {
               Category: {item.category}
             </Text>
           )}
-          <Text style={[styles.buyer, { color: isDark.text }]}>
-            Company: {user?.company}
-          </Text>
-
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <Text style={[styles.buyer, { color: isDark.text }]}>Company:</Text>
+            <Skeleton
+              containerStyle={{ flex: 1 }}
+              animationDirection="horizontalLeft"
+              isLoading={user.loading}
+              layout={[
+                {
+                  borderRadius: 10,
+                  height: 12,
+                  width: SCREEN_WIDTH * 0.3,
+                },
+              ]}
+            >
+              <Text style={[styles.buyer, { color: isDark.text }]}>
+                {user?.data?.company}
+              </Text>
+            </Skeleton>
+          </View>
           <Text style={[styles.description, { color: isDark.text }]}>
             Description: {item.description}
           </Text>
         </View>
-        <View style={[styles.buyerContainer, {borderColor: isDark.background}]}>
+        <View
+          style={[
+            styles.buyerContainer,
+            { backgroundColor: isDark.background, shadowColor: isDark.shadow },
+          ]}
+        >
           <Avatar
-            name={user?.fullName}
+            name={user?.data?.fullName}
             size={50}
             source={{ uri: user?.avatar }}
             colorize={true}
           />
-          <Text style={[styles.buyer, { color: isDark.text }]}>
-            {user?.fullName}
-          </Text>
+          <Skeleton
+            containerStyle={{ backgroundColor: "transparent" }}
+            animationDirection="horizontalLeft"
+            isLoading={user.loading}
+            layout={[
+              {
+                borderRadius: 10,
+                height: 12,
+                width: SCREEN_WIDTH * 0.35,
+              },
+            ]}
+          >
+            <Text style={[styles.buyer, { color: isDark.text }]}>
+              {user?.data?.fullName}
+            </Text>
+          </Skeleton>
           <View
             style={{
               flexDirection: "row",
               columnGap: 8,
             }}
           >
-            <ButtonContact user={user} contact="phone" />
-            <ButtonContact user={user} contact="whatsapp" />
+            <ButtonContact user={user.data} contact="phone" />
+            <ButtonContact user={user.data} contact="whatsapp" />
           </View>
         </View>
       </Animated.ScrollView>
@@ -148,7 +179,7 @@ export default function ProductDetails() {
         />
       )}
       <Carousel
-        loop={true}
+        loop={item.image.length > 1 ? true : false}
         width={SCREEN_WIDTH}
         height={SCREEN_HEIGHT * 0.3}
         autoPlay={true}
@@ -163,7 +194,6 @@ export default function ProductDetails() {
 
 const styles = StyleSheet.create({
   container: {
-    // flexGrow: 1,
     paddingTop: StatusBar.currentHeight,
   },
   image: {
@@ -222,13 +252,18 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     flexDirection: "column",
-    gap: 8,
-    marginTop: 26,
-    borderColor: "white",
-    borderWidth: 6,
+    gap: 10,
+    shadowOffset: {
+      width: 10,
+      height: 10,
+    },
+    shadowOpacity: 10,
+    shadowRadius: 10,
+    elevation: 2,
     borderRadius: 20,
-    paddingVertical: 16,
+    paddingVertical: 8,
     paddingHorizontal: 50,
+    marginBottom: 4,
   },
   description: {
     fontSize: 16,

@@ -16,7 +16,6 @@ import Animated, {
   FadeInRight,
   LinearTransition,
 } from "react-native-reanimated";
-import { ThemedText } from "../ThemedText";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 10,
     shadowRadius: 10,
-    elevation: 4,
+    elevation: 3,
   },
   image: {
     borderRadius: 10,

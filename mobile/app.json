@@ -13,7 +13,8 @@
       "backgroundColor": "#081526"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.pro.beskelti"
     },
     "android": {
       "adaptiveIcon": {
