@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
     padding: 12,
     alignSelf: "center",
     alignItems: "center",
+    marginTop: 10,
   },
 
   total: {

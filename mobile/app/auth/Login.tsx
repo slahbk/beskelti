@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
-    backgroundColor: "#22a6f1",
+    backgroundColor: "#37B9F1",
     marginTop: 10,
   },
   textButton: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   link: {
-    color: "#22a6f1",
+    color: "#37B9F1",
     textDecorationLine: "underline",
   },
   logo: {

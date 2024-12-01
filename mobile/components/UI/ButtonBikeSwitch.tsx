@@ -20,7 +20,7 @@ export default function ButtonBikeSwitch({ selectedId, setSelectedId }: any) {
 
   const buttonWidth = width * 0.3; // 30% of screen width
   const buttonHeight = width * 0.15; // 15% of screen width
-  const buttonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#17809e";
+  const buttonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#37B9F1";
 
   const renderButton = (id: string, label: string, icon?: React.ReactNode) => (
     <TouchableOpacity

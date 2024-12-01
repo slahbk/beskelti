@@ -32,6 +32,7 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -94,7 +95,7 @@ export default function RootLayout() {
                   name="person-circle-outline"
                   size={30}
                   color={isDark.text}
-                  onPress={() => router.navigate("/auth/SignUp")}
+                  onPress={() => router.navigate("/auth/Profile")}
                 />
               ),
             }}
@@ -115,6 +116,24 @@ export default function RootLayout() {
           <Stack.Screen
             name="auth/Login"
             options={{ headerTitle: "Login", headerShown: false }}
+          />
+          <Stack.Screen
+            name="auth/Profile"
+            options={{
+              headerTitle: "",
+              headerShown: true,
+              headerRight: () => (
+                <Ionicons
+                  name="log-out-outline"
+                  size={24}
+                  color={"#c00"}
+                  onPress={async () => {
+                    await AsyncStorage.removeItem("token");
+                    router.replace("/auth/Login");
+                  }}
+                />
+              ),
+            }}
           />
         </Stack>
       </Provider>

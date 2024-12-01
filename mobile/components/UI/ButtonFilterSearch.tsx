@@ -10,7 +10,7 @@ export default function ButtonFilterSearch({
 }: any) {
   const colorScheme = useColorScheme();
   const isDark = Colors[colorScheme ?? "light"];
-  const buutonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#17809e";
+  const buutonBackgroundColor = colorScheme === "light" ? "#5fccfd" : "#37B9F1";
 
   return (
     <TouchableOpacity

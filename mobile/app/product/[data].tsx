@@ -13,10 +13,8 @@ import Animated from "react-native-reanimated";
 import { useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { UserType } from "@/types/UserType";
 import Carousel from "react-native-reanimated-carousel";
 import ImageView from "react-native-image-viewing";
-import { Avatar } from "@kolking/react-native-avatar";
 import ButtonContact from "@/components/UI/ButtonContact";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "@/redux/reducers/userSlice";
@@ -124,12 +122,21 @@ export default function ProductDetails() {
             { backgroundColor: isDark.background, shadowColor: isDark.shadow },
           ]}
         >
-          <Avatar
-            name={user?.data?.fullName}
-            size={50}
-            source={{ uri: user?.avatar }}
-            colorize={true}
-          />
+          {user?.data?.avatar !== "null" ? (
+            <Image
+              source={{ uri: user?.data?.avatar }}
+              style={{ width: 50, height: 50, borderRadius: 50 }}
+              resizeMode="cover"
+            />
+          ) : (
+            <Text style={[styles.avatar]}>
+              {(
+                user?.data?.fullName?.split(" ")[0][0] +
+                user?.data?.fullName?.split(" ")[1][0]
+              ).toUpperCase()}
+            </Text>
+          )}
+
           <Skeleton
             containerStyle={{ backgroundColor: "transparent" }}
             animationDirection="horizontalLeft"
@@ -264,6 +271,17 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 50,
     marginBottom: 4,
+  },
+  avatar: {
+    fontSize: 26,
+    backgroundColor: "#b5b5b5",
+    color: "#fff",
+    width: 50,
+    height: 50,
+    textAlign: "center",
+    textAlignVertical: "center",
+    borderRadius: 100,
+    fontFamily: "Poppins_500Medium",
   },
   description: {
     fontSize: 16,

@@ -20,6 +20,7 @@
     "@expo/vector-icons": "^14.0.4",
     "@kolking/react-native-avatar": "^2.1.2",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-navigation/drawer": "^7.0.7",
     "@react-navigation/native": "^6.0.2",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",

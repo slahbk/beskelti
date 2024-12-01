@@ -27,6 +27,7 @@ export default function SignUp() {
   const [error, setError] = React.useState({
     email: false,
     password: false,
+    phone: false,
   });
   const [form, setForm] = React.useState<UserType>({
     email: "",
@@ -46,20 +47,23 @@ export default function SignUp() {
         form.password === form.confirmPassword
       ) {
         setError({ ...error, password: false });
-        const data = {
-          email: form.email,
-          password: form.password,
-          fullName: form.fullName,
-          phone: form.phone,
-          company: form.company,
-          avatar: form.avatar,
-        };
-        await axios
+        if(form.phone.length >= 8) {
+          setError({ ...error, phone: false });
+          const data = {
+            email: form.email,
+            password: form.password,
+            fullName: form.fullName,
+            phone: form.phone,
+            company: form.company,
+            avatar: form.avatar,
+          };
+          await axios
           .post(`${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/user/signup`, data)
           .then(() => router.replace("/auth/Login"))
           .catch((err) => setError({ ...error, email: true }));
-      } else setError({ ...error, password: true, email: false });
-    } else setError({ ...error, email: true, password: false });
+        } else setError({ ...error, phone: true, email: false, password: false });
+      } else setError({ ...error, password: true, email: false, phone: false });
+    } else setError({ ...error, email: true, password: false, phone: false });
   };
   return (
     <Animated.ScrollView
@@ -163,7 +167,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
-    backgroundColor: "#22a6f1",
+    backgroundColor: "#37B9F1",
     marginTop: 10,
   },
   logo: {
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   link: {
-    color: "#22a6f1",
+    color: "#37B9F1",
     textDecorationLine: "underline",
   },
 });

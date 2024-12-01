@@ -45,7 +45,7 @@ export default function InputEmail({
           onChangeText={(e) => setForm({ ...form, [label]: e })}
         />
       </View>
-      {error[label] && <Text style={styles.error}>Invalid email</Text>}
+      {error[label] && <Text style={styles.error}>Invalid {label}</Text>}
     </>
   );
 }
