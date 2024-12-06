@@ -18,7 +18,13 @@ export default function InputPassword({ form, setForm, label, error }: any) {
         <Ionicons
           name={form[label] ? "key" : "key-outline"}
           size={20}
-          color={form[label] ? "#555" : "#b5b5b5"}
+          color={
+            form[label]
+              ? colorScheme === "light"
+                ? "#555"
+                : "#ccc"
+              : "#b5b5b5"
+          }
           style={{ position: "absolute", zIndex: 10, marginLeft: 6 }}
         />
         <Ionicons
@@ -48,9 +54,7 @@ export default function InputPassword({ form, setForm, label, error }: any) {
           onChangeText={(e) => setForm({ ...form, [label]: e })}
         />
       </View>
-      {error[label] && (
-        <Text style={styles.error}>Invalid password</Text>
-      )}
+      {error[label] && <Text style={styles.error}>Invalid password</Text>}
     </>
   );
 }

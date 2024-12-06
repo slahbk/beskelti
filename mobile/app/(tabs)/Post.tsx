@@ -94,6 +94,7 @@ export default function Post() {
     const token = await AsyncStorage.getItem("token");
     const decodedToken = jwtDecode<JwtPayload>(token as string);
     if (token) {
+      productData.userId = Number(decodedToken.sub);
       const res = await axios.post(
         `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/auth/check-token`,
         {
@@ -104,12 +105,10 @@ export default function Post() {
         Toast.error("expired login");
         router.replace("/auth/Login");
       }
-    }
-    else {
+    } else {
       Toast.error("expired login");
       router.replace("/auth/Login");
     }
-    productData.userId = Number(decodedToken.sub);
     setIsLoading(true);
     try {
       productData.image?.forEach(async (image) => {
@@ -153,7 +152,12 @@ export default function Post() {
     productData.image = uploadedImages;
     await axios.post(
       `${process.env.EXPO_PUBLIC_IP_ADDRESS}/api/product/add`,
-      productData
+      productData,
+      {
+        headers: {
+          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+        },
+      }
     );
     setIsLoading(false);
     Toast.success("Product Added Successfully");

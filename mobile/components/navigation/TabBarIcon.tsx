@@ -41,18 +41,16 @@ export function TabBarIcon({ source, focused, label, ...rest }: lottie) {
         {...rest}
       />
       {focused && (
- 
-          <Text
-            style={{
-              fontSize: 11,
-              fontFamily: "Poppins_500Medium",
-              marginTop: 2,
-              color: Colors[useColorScheme() ?? "light"].tint,
-            }}
-          >
-            {label}
-          </Text>
-        
+        <Text
+          style={{
+            fontSize: 11,
+            fontFamily: "Poppins_500Medium",
+            marginTop: 2,
+            color: Colors[useColorScheme() ?? "light"].tint,
+          }}
+        >
+          {label}
+        </Text>
       )}
     </Animated.View>
   );

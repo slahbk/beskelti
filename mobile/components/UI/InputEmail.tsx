@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function InputEmail({
   label,
@@ -9,6 +10,7 @@ export default function InputEmail({
   error,
   isDark,
 }: any) {
+  const colorScheme = useColorScheme();
   const email = form.email ? "mail" : "mail-outline";
   const fullname = form.fullName ? "person" : "person-outline";
   const phone = form.phone ? "call" : "call-outline";
@@ -28,7 +30,13 @@ export default function InputEmail({
             label === "email" ? email : label === "fullName" ? fullname : phone
           }
           size={20}
-          color={form[label] ? "#555" : "#b5b5b5"}
+          color={
+            form[label]
+              ? colorScheme === "light"
+                ? "#555"
+                : "#ccc"
+              : "#b5b5b5"
+          }
           style={{ position: "absolute", zIndex: 10, marginLeft: 6 }}
         />
         <TextInput
