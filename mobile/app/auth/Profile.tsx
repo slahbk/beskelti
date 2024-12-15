@@ -49,7 +49,7 @@ export default function Profile() {
       style={[styles.container, { backgroundColor: isDark.background }]}
     >
       <View style={styles.header}>
-        {user?.data?.avatar !== "null" ? (
+        {user?.data?.avatar !== "null" && user?.data?.avatar !== "" ? (
           <Image
             source={{ uri: user?.data?.avatar }}
             style={{ width: 100, height: 100, borderRadius: 100 }}

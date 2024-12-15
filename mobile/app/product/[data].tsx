@@ -122,7 +122,7 @@ export default function ProductDetails() {
             { backgroundColor: isDark.background, shadowColor: isDark.shadow },
           ]}
         >
-          {user?.data?.avatar !== "null" ? (
+          {user?.data?.avatar !== "" && user?.data?.avatar !== "null" ? (
             <Image
               source={{ uri: user?.data?.avatar }}
               style={{ width: 50, height: 50, borderRadius: 50 }}
